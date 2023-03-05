@@ -1,0 +1,10 @@
+logging:
+  level:
+    root: info
+    parrhesia1000: debug
+    org:
+      springframework:
+        web: debug
+
+app.pub: 8531bb63dfbe216e140ed8507b38678f684ae67e0c06512abe5a19e50f0db1c3
+

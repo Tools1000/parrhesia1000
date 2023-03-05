@@ -1,0 +1,86 @@
+[
+  "EVENT",
+  "find-authors",
+  {
+    "content": "{\"wss://nos.lol\":{\"write\":true,\"read\":true},\"wss://relay.damus.io\":{\"write\":true,\"read\":true},\"wss://brb.io\":{\"write\":true,\"read\":true},\"wss://offchain.pub\":{\"write\":true,\"read\":true},\"wss://relay.current.fyi\":{\"write\":true,\"read\":true},\"wss://eden.nostr.land\":{\"write\":true,\"read\":true},\"wss://relay.snort.social\":{\"write\":true,\"read\":true}}",
+    "created_at": 1678022858,
+    "id": "e63d8361dc98b08548c55047b55c53a8a0342ff6931cc463b274efb8085ca478",
+    "kind": 3,
+    "pubkey": "8531bb63dfbe216e140ed8507b38678f684ae67e0c06512abe5a19e50f0db1c3",
+    "sig": "f50e0607903e3fa10aeac18293ccb6e8f9de9583fe4411438cc1693ab33a25dcc2c83d8bc0c2338f11c0ec2d19d7f7758e4d109b1eca9cba3f36c16ae5deafe9",
+    "tags": [
+      [
+        "p",
+        "3efdaebb1d8923ebd99c9e7ace3b4194ab45512e2be79c1b7d68d9243e0d2681"
+      ],
+      [
+        "p",
+        "8531bb63dfbe216e140ed8507b38678f684ae67e0c06512abe5a19e50f0db1c3"
+      ],
+      [
+        "p",
+        "32e1827635450ebb3c5a7d12c1f8e7b2b514439ac10a67eef3d9fd9c5c68e245"
+      ],
+      [
+        "p",
+        "7bb280ccd7a37d90e635063c22fae88a53e607a1bc7e5b1953c7f2c0d8220a05"
+      ],
+      [
+        "p",
+        "2edbcea694d164629854a52583458fd6d965b161e3c48b57d3aff01940558884"
+      ],
+      [
+        "p",
+        "82341f882b6eabcd2ba7f1ef90aad961cf074af15b9ef44a09f9d2a8fbfbe6a2"
+      ],
+      [
+        "p",
+        "5195320c049ccff15766e070413bbec1c021bca03ee022838724a8ffb680bf3a"
+      ],
+      [
+        "p",
+        "af2f682f512899852c6654ff065aa405a41d15e2b1cb6c9173123605744f06e6"
+      ],
+      [
+        "p",
+        "be1d89794bf92de5dd64c1e60f6a2c70c140abac9932418fee30c5c637fe9479"
+      ],
+      [
+        "p",
+        "c67cd3e1a83daa56cff16f635db2fdb9ed9619300298d4701a58e68e84098345"
+      ],
+      [
+        "p",
+        "d34b37ea9c8800f79ce43254483171f09c2c0011fee03bb3b9b8be8f083253cd"
+      ],
+      [
+        "p",
+        "17b209d34f8fd7c30fde779eb8c3b0c84f724d021ebe6007a5ba70093b2576da"
+      ],
+      [
+        "p",
+        "ca4ef0d885f25c5b1aa6d424f591b1b7a7d37af1cf58eaaa21a6e0d584e65287"
+      ],
+      [
+        "p",
+        "bfd121a37773554f2ef3e8e524e0e337f3bf852eb55cd9664e2c901514f063e7"
+      ],
+      [
+        "p",
+        "5df413d4c5e5035ff508fd99b38b21ea9a0ac0b9ecc34f3312aba9aa2add4f5b"
+      ],
+      [
+        "p",
+        "77ce56f89d1228f7ff3743ce1ad1b254857b9008564727ebd5a1f317362f6ca7"
+      ],
+      [
+        "p",
+        "e81ca829c9bd368cc584844078f570c105e59d9392d19ce71bb9f34c1ac633f3"
+      ],
+      [
+        "p",
+        "f728d9e6e7048358e70930f5ca64b097770d989ccd86854fe618eda9c8a38106"
+      ]
+    ]
+  }
+]
