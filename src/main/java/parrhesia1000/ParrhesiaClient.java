@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
+//@Component
 public class ParrhesiaClient {
 
     private final SessionCallbackHandler sessionCallbackHandler;

@@ -1,0 +1,63 @@
+. root {
+    GRAY_0: #1F2122;
+    GRAY_1: #35393B;
+    GRAY_2: #494E51;
+    GRAY_3: #585E62;
+    GRAY_4: #71797E;
+    GRAY_5: #8E989E;
+    GRAY_6: #9FAAB1;
+    GRAY_7: #BEC9CF;
+    GRAY_8: #D3DCE1;
+    GRAY_9: #EDF3F7;
+
+    -fx-base: GRAY_3;
+
+    -fx-background: derive(-fx-base,-26.4%);
+    -fx-control-inner-background: derive(-fx-base,20%);
+    -fx-body-color: linear-gradient(to top,
+    ladder(
+            -fx-color,
+            derive(-fx-color,8%) 75%,
+            derive(-fx-color,10%) 80%
+    ),
+    derive(-fx-color,25%));
+}
+
+.text-input {
+    -fx-prompt-text-fill: derive(-fx-control-inner-background,+80%);
+}
+
+.kodi-box {
+    /*-fx-border-style: solid hidden hidden hidden;*/
+    /*-fx-border-width: 2;*/
+    /*-fx-border-color: white;*/
+}
+
+.kodi-link {
+    -fx-text-fill: white;
+}
+.kodi-link:hover{
+    -fx-text-fill: #e3a359;
+}
+
+.kodi-genre {
+    -fx-border-color: white;
+}
+
+.file-size-box {
+    -fx-border-color: white;
+}
+
+.type-label {
+    -fx-background-color: rgba(0, 0, 0, 0.75); -fx-background-radius: 10;
+}
+
+.progress-bar {
+    -fx-accent: rgb(255, 255, 255);
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: white;
+}
+

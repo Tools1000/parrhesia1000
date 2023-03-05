@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="parrhesia1000.ui.MainViewController" fx:id="root">
+
+    <padding>
+        <Insets top="4" right="4" bottom="4" left="4"/>
+    </padding>
+
+    <MenuBar fx:id="menuBar">
+        <Menu text="File">
+            <MenuItem text="Settings" onAction="#handleMenuItemSettings" accelerator="Shortcut+S"/>
+        </Menu>
+    </MenuBar>
+
+
+
+</VBox>

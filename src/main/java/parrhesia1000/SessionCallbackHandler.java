@@ -35,7 +35,7 @@ public class SessionCallbackHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("Connection established {}", session);
-        requestSender.sendRequest(session, new RequestFactory().buildFindAuthorsRequest(appConfig.pub));
+        requestSender.sendRequest(session, new RequestFactory().buildFindAuthorsRequest(appConfig.getPub()));
     }
 
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {

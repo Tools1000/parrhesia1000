@@ -1,4 +1,10 @@
+spring:
+  main:
+    banner-mode: off
+
 logging:
+  file:
+    name: ${app.settings.log-file}
   level:
     root: info
     parrhesia1000: debug
@@ -6,5 +12,17 @@ logging:
       springframework:
         web: debug
 
-app.pub: 8531bb63dfbe216e140ed8507b38678f684ae67e0c06512abe5a19e50f0db1c3
+app:
+  pub: 8531bb63dfbe216e140ed8507b38678f684ae67e0c06512abe5a19e50f0db1c3
+  name: parrhesia1000
+  debug: false
+  settings:
+      parent: ${user.home}
+      dir: ${app.settings.parent}/.${app.name}
+      log-file: ${app.settings.dir}/${app.name}.log
+  ui:
+    appTitle: "Parrhesia1000"
+    initialWidth: 800
+    initialHeight: 600
+    imageHeight: 200
 

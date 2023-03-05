@@ -1,31 +1,37 @@
 package parrhesia1000;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.util.UriTemplate;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
+import parrhesia1000.ui.StageReadyEvent;
 
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.HexFormat;
-import java.util.Map;
+public class ParrhesiaApplication  extends Application {
 
-@SpringBootApplication
-public class ParrhesiaApplication {
+    private ConfigurableApplicationContext applicationContext;
 
-    public static void main(String[] args) {
-        SpringApplication.run(ParrhesiaApplication.class, args);
-
+    @Override
+    public void init() {
+        this.applicationContext = new SpringApplicationBuilder()
+                .sources(Launcher.class)
+//                .headless(false)
+                .run(getParameters().getRaw().toArray(new String[0]));
     }
 
-    private static URI buildUrl() {
-        HexFormat hex = HexFormat.of();
-        String hexString = hex.formatHex("npub1s5cmkc7lhcsku9qwmpg8kwr83a5y4en7psr9z247tgv72rcdk8psy7c27z".getBytes(StandardCharsets.UTF_8));
-        UriTemplate uriTemplate = new UriTemplate("nostrconnect:// + " + hexString + "?relay={relay}&metadata={metadata}");
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("relay", "wss://relay.damus.io");
-        vars.put("metadata", new HashMap<String,String>());
-        URI uri = uriTemplate.expand(vars);
-        return uri;
+    @Override
+    public void start(Stage stage) {
+        applicationContext.publishEvent(new StageReadyEvent(stage));
+    }
+
+    @Override
+    public void stop() {
+        applicationContext.close();
+        Platform.exit();
+    }
+
+
+    public static void main(final String[] args) {
+        launch(args);
     }
 }

@@ -9,5 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfig {
 
-    String pub;
+    private boolean debug = true;
+
+    private String pub;
 }
