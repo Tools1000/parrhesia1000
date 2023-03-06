@@ -45,6 +45,10 @@ public class UiUtil {
         Stream.of(elements).forEach(l -> l.setStyle("-fx-background-color: " + UiUtil.getRandomRgbaColorString(0.3) + ";"));
     }
 
+    public static void applyRandomTextColors(Node... elements) {
+        Stream.of(elements).forEach(l -> l.setStyle("-fx-text-fill: " + UiUtil.getRandomRgbaColorString(0.3) + ";"));
+    }
+
 
     public static <T extends Node> T applyDebug(T node, AppConfig appConfig) {
         if (appConfig != null && appConfig.isDebug()) {

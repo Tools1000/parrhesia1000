@@ -29,7 +29,7 @@ public class FindAuthorsEventHandler extends EventHandlerPrototype {
 
     @Override
     protected boolean acceptedEvent(String subscriptionId) {
-        return "subscribed-authors-feed".equals(subscriptionId);
+        return "find-authors".equals(subscriptionId);
     }
 
     private List<String> getAuthorsFromEvent(Event event) {

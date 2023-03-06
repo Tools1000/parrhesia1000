@@ -1,8 +1,10 @@
 package parrhesia1000.event;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
+@Slf4j
 public abstract class EventHandlerPrototype implements EventHandler {
 
     protected final ObjectMapper objectMapper;
@@ -14,6 +16,7 @@ public abstract class EventHandlerPrototype implements EventHandler {
     @Override
     public void handleEvent(WebSocketSession session, Event event) {
         if(event.getEvent().equals("EOSE")){
+            log.debug("Received EOSE {}", event);
             return;
         }
         if(acceptedEvent(event.getSubscriptionId())){

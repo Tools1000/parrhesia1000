@@ -1,6 +1,6 @@
 package parrhesia1000;
 
-import jakarta.annotation.PostConstruct;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,13 +13,12 @@ import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RequiredArgsConstructor
-//@Component
+@Component
 public class ParrhesiaClient {
 
     private final SessionCallbackHandler sessionCallbackHandler;
 
-    @PostConstruct
-    public void postConstruct() {
+    public void connect() {
         UriTemplate uriTemplate = new UriTemplate("wss://relay.damus.io");
         WebSocketClient client = new StandardWebSocketClient();
         CompletableFuture<WebSocketSession> websession = client.execute(sessionCallbackHandler, uriTemplate.toString());

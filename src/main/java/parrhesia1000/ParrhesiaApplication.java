@@ -21,6 +21,9 @@ public class ParrhesiaApplication  extends Application {
 
     @Override
     public void start(Stage stage) {
+
+        applicationContext.getBeanFactory().registerSingleton("hostServices", getHostServices());
+
         applicationContext.publishEvent(new StageReadyEvent(stage));
     }
 

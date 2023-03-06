@@ -9,8 +9,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import parrhesia1000.event.Event;
-import parrhesia1000.event.FeedEventHandler;
 import parrhesia1000.event.FindAuthorsEventHandler;
+import parrhesia1000.event.SubscribedAuthorsEventHandler;
 import parrhesia1000.request.RequestFactory;
 import parrhesia1000.request.RequestSender;
 
@@ -30,11 +30,11 @@ public class SessionCallbackHandler extends TextWebSocketHandler {
 
     private final FindAuthorsEventHandler findAuthorsEventHandler;
 
-    private final FeedEventHandler feedEventHandler;
+    private final SubscribedAuthorsEventHandler subscribedAuthorsEventHandler;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        log.info("Connection established {}", session);
+        log.info("Connection established with session: {}", session);
         requestSender.sendRequest(session, new RequestFactory().buildFindAuthorsRequest(appConfig.getPub()));
     }
 
@@ -46,14 +46,16 @@ public class SessionCallbackHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws InterruptedException, IOException {
 
-        log.debug("Message payload: {}", message.getPayload());
+//        log.debug("Message payload: {}", message.getPayload());
 
         Event event = mapper.readValue(message.getPayload().getBytes(StandardCharsets.UTF_8), Event.class);
 
         log.debug("Received event: {}", event);
 
         findAuthorsEventHandler.handleEvent(session, event);
-        feedEventHandler.handleEvent(session, event);
+        subscribedAuthorsEventHandler.handleEvent(session, event);
+
+
 
     }
 
