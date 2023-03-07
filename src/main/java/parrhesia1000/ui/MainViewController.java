@@ -30,7 +30,7 @@ public class MainViewController extends DebuggableController implements Initiali
     public VBox root;
 
     @FXML
-    ListView<FeedContentUiElement> listView;
+    ListView<FeedContentBox> listView;
 
     public MainViewController(AppConfig appConfig, PersonalFeed personalFeed, ParrhesiaClient client) {
         super(appConfig);
@@ -51,13 +51,13 @@ public class MainViewController extends DebuggableController implements Initiali
         applyRandomColors(root, listViewBox, listView);
         listView.prefWidthProperty().bind(listViewBox.prefWidthProperty());
         listView.prefHeightProperty().bind(listViewBox.prefHeightProperty());
-        listView.setCellFactory(new Callback<ListView<FeedContentUiElement>, ListCell<FeedContentUiElement>>() {
+        listView.setCellFactory(new Callback<ListView<FeedContentBox>, ListCell<FeedContentBox>>() {
             @Override
-            public ListCell<FeedContentUiElement> call(ListView<FeedContentUiElement> param) {
-                ListCell<FeedContentUiElement> lc = new ListCell<>() {
+            public ListCell<FeedContentBox> call(ListView<FeedContentBox> param) {
+                ListCell<FeedContentBox> lc = new ListCell<>() {
 
                     @Override
-                    protected void updateItem(FeedContentUiElement item, boolean empty) {
+                    protected void updateItem(FeedContentBox item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty) {
                             setText(null);
@@ -71,7 +71,7 @@ public class MainViewController extends DebuggableController implements Initiali
                 return lc;
             }
         });
-        Bindings.bindContent(listView.getItems(), personalFeed.getFeedContentUiElements());
+        Bindings.bindContent(listView.getItems(), personalFeed.getFeedContentBoxes());
         log.debug("Initialization done, connecting");
         client.connect();
     }

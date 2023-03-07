@@ -14,11 +14,12 @@ import parrhesia1000.FeedContentElement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Getter
-public class FeedContentUiElement extends VBox {
+public class FeedContentBox extends VBox {
 
     // Pattern for recognizing a URL, based off RFC 3986
     private static final Pattern urlPattern = Pattern.compile(
@@ -29,19 +30,17 @@ public class FeedContentUiElement extends VBox {
 
     private final FeedContentElement feedContentElement;
 
-    public FeedContentUiElement(HostServices hostServices, FeedContentElement feedContentElement) {
+    public FeedContentBox(Executor executor, HostServices hostServices, FeedContentElement feedContentElement) {
 
         this.feedContentElement = feedContentElement;
 
-        AuthorElement authorElement = new AuthorElement(feedContentElement);
+        AuthorBoxElement authorBoxElement = new AuthorBoxElement(executor, feedContentElement);
 
-        super.getChildren().add(authorElement);
+        super.getChildren().add(authorBoxElement);
 
         setPadding(new Insets(8, 8, 8, 8));
 
-
         List<Node> textList = new ArrayList<>();
-
 
         Matcher matcher = urlPattern.matcher(feedContentElement.getText());
 

@@ -8,20 +8,19 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import parrhesia1000.dto.Author;
 import parrhesia1000.event.Event;
-import parrhesia1000.event.handler.AuthorMetadataEventHandler;
-import parrhesia1000.event.handler.FindAuthorsEventHandler;
-import parrhesia1000.event.handler.PersonalFeedHandler;
 import parrhesia1000.request.RequestFactory;
 import parrhesia1000.request.RequestSender;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class SessionCallbackHandler extends TextWebSocketHandler {
+public class TestSessionCallbackHandler extends TextWebSocketHandler {
 
     private final AppConfig appConfig;
 
@@ -29,17 +28,10 @@ public class SessionCallbackHandler extends TextWebSocketHandler {
 
     private final RequestSender requestSender;
 
-    private final FindAuthorsEventHandler findAuthorsEventHandler;
-
-    private final PersonalFeedHandler personalFeedHandler;
-
-    private final AuthorMetadataEventHandler authorMetadataEventHandler;
-
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("Connection established with session: {}", session);
-
-        requestSender.sendRequest(session, new RequestFactory().buildFindAuthorsRequest(appConfig.getPub()));
+        requestSender.sendRequest(session, new RequestFactory().buildGetAuthorMetadataRequest(List.of("c5d33ae2ca60815d54f6f6ef4af3a426355665fb0a4bb384d28171e6b872c441")));
     }
 
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
@@ -50,14 +42,17 @@ public class SessionCallbackHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws InterruptedException, IOException {
 
+//        log.debug("Message payload: {}", message.getPayload());
+
         Event event = mapper.readValue(message.getPayload().getBytes(StandardCharsets.UTF_8), Event.class);
 
         log.debug("Received event: {}", event);
 
-        findAuthorsEventHandler.handleEvent(session, event);
-        personalFeedHandler.handleEvent(session, event);
-        authorMetadataEventHandler.handleEvent(session, event);
+        if(!event.getEvent().equals("EOSE")) {
+            Author author = mapper.readValue(event.getData().getContent(), Author.class);
+            log.debug("Author: {}", author);
 
+        }
 
     }
 

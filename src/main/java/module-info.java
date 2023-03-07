@@ -18,6 +18,10 @@ open module parrhesia {
     requires spring.web;
     requires spring.websocket;
     requires lombok;
+    requires org.apache.commons.io;
     requires org.threeten.extra;
     exports parrhesia1000;
+    exports parrhesia1000.dto;
+    exports parrhesia1000.ui;
+
 }

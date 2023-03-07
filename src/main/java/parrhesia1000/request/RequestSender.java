@@ -1,6 +1,7 @@
 package parrhesia1000.request;
 
 import org.springframework.web.socket.WebSocketSession;
+import parrhesia1000.dto.Request;
 
 public interface RequestSender {
 

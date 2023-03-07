@@ -5,25 +5,24 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
-import parrhesia1000.ui.FeedContentUiElement;
 
 @Getter
 @Component
 public class PersonalFeed {
 
-    private final ObservableList<FeedContentUiElement> feedContentUiElements;
+    private final ObservableList<FeedContentBox> feedContentBoxes;
 
-    private final ObservableList<FeedContentUiElement> observableList = FXCollections.observableArrayList();
+    private final ObservableList<FeedContentBox> observableList = FXCollections.observableArrayList();
 
     public PersonalFeed() {
-        SortedList<FeedContentUiElement> sortedList = new SortedList<>( observableList,
-                (FeedContentUiElement stock1, FeedContentUiElement stock2) -> {
+        SortedList<FeedContentBox> sortedList = new SortedList<>(observableList,
+                (FeedContentBox stock1, FeedContentBox stock2) -> {
                     return stock2.getFeedContentElement().getCreatedAt().compareTo(stock1.getFeedContentElement().getCreatedAt());
                 });
-        this.feedContentUiElements = sortedList;
+        this.feedContentBoxes = sortedList;
     }
 
-    public void addElement(FeedContentUiElement feedContentUiElement){
-        observableList.add(feedContentUiElement);
+    public void addElement(FeedContentBox feedContentBox) {
+        observableList.add(feedContentBox);
     }
 }

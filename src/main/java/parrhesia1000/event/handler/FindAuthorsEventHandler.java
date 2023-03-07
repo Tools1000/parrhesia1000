@@ -1,12 +1,13 @@
-package parrhesia1000.event;
+package parrhesia1000.event.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import parrhesia1000.Filters;
-import parrhesia1000.request.Request;
+import parrhesia1000.dto.Request;
+import parrhesia1000.event.Event;
+import parrhesia1000.request.RequestFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,18 +24,19 @@ public class FindAuthorsEventHandler extends EventHandlerPrototype {
     @Override
     protected void doHandleEvent(WebSocketSession session, Event event) {
         List<String> authors = getAuthorsFromEvent(event);
-        log.debug("Found authors: {}", authors);
+        log.debug("Found {} authors", authors.size());
         subscribeToAuthors(session, authors);
+        requestAuthorsMetadata(session, authors);
     }
 
     @Override
     protected boolean acceptedEvent(String subscriptionId) {
-        return "find-authors".equals(subscriptionId);
+        return RequestFactory.FIND_AUTHORS_SUBSCRIPTION_ID.equals(subscriptionId);
     }
 
     private List<String> getAuthorsFromEvent(Event event) {
         List<String> authors = new ArrayList<>();
-        if ("find-authors".equals(event.getSubscriptionId())) {
+        if (RequestFactory.FIND_AUTHORS_SUBSCRIPTION_ID.equals(event.getSubscriptionId())) {
             if (event.getData() == null) {
                 log.warn("No event data for {}", event);
             } else {
@@ -50,8 +52,9 @@ public class FindAuthorsEventHandler extends EventHandlerPrototype {
 
     private void subscribeToAuthors(WebSocketSession session, List<String> authors) {
         try {
-            Request req = buildSubscribeAuthorsRequest(authors);
+            Request req = RequestFactory.buildSubscribeAuthorsRequest(authors);
             String json = objectMapper.writeValueAsString(req);
+            log.info("Requesting feed from {} authors", authors.size());
             log.debug("Sending {}", json);
             session.sendMessage(new TextMessage(json));
         } catch (Exception e) {
@@ -59,13 +62,17 @@ public class FindAuthorsEventHandler extends EventHandlerPrototype {
         }
     }
 
-    private Request buildSubscribeAuthorsRequest(List<String> authors) {
-        Filters filters = new Filters();
-        filters.getKinds().add(1);
-        filters.getAuthors().addAll(authors);
-        Request req = new Request();
-        req.setSubscriptionId("subscribed-authors-feed");
-        req.setFilters(filters);
-        return req;
+    private void requestAuthorsMetadata(WebSocketSession session, List<String> authors) {
+        try {
+            Request req = RequestFactory.buildGetAuthorMetadataRequest(authors);
+            String json = objectMapper.writeValueAsString(req);
+            log.info("Requesting metadata for {} authors", authors.size());
+            log.debug("Sending {}", json);
+            session.sendMessage(new TextMessage(json));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
+
+
 }

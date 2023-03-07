@@ -4,14 +4,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.MultipleSelectionModel;
 
-public class NoSelectionModel extends MultipleSelectionModel<FeedContentUiElement> {
+public class NoSelectionModel extends MultipleSelectionModel<FeedContentBox> {
     @Override
     public ObservableList<Integer> getSelectedIndices() {
         return FXCollections.emptyObservableList();
     }
 
     @Override
-    public ObservableList<FeedContentUiElement> getSelectedItems() {
+    public ObservableList<FeedContentBox> getSelectedItems() {
         return FXCollections.emptyObservableList();
     }
 
@@ -36,7 +36,7 @@ public class NoSelectionModel extends MultipleSelectionModel<FeedContentUiElemen
     }
 
     @Override
-    public void select(FeedContentUiElement feedContentUiElement) {
+    public void select(FeedContentBox feedContentBox) {
 
     }
 

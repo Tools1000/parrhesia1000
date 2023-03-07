@@ -18,6 +18,8 @@ public class ParrhesiaClient {
 
     private final SessionCallbackHandler sessionCallbackHandler;
 
+    private final TestSessionCallbackHandler testSessionCallbackHandler;
+
     public void connect() {
         UriTemplate uriTemplate = new UriTemplate("wss://relay.damus.io");
         WebSocketClient client = new StandardWebSocketClient();
