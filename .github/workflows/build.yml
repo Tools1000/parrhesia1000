@@ -1,0 +1,47 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Build
+env:
+  JAVA_VERSION: 17
+defaults:
+  run:
+    shell: bash
+on:
+  push:
+    branches: [ "main" ]
+    tags:
+      - '*'
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch: {}
+jobs:
+  compile_and_test:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    name: Compile and Test
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+          distribution: 'temurin'
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Maven Build, Sonarcloud analysis
+        run: mvn -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization=tools1000 -Dsonar.projectKey=Tools1000_parrhesia1000 -B -Pall verify jacoco:report sonar:sonar
