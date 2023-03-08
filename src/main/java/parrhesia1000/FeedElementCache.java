@@ -1,5 +1,6 @@
 package parrhesia1000;
 
+import jakarta.annotation.PreDestroy;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Component
@@ -30,17 +33,29 @@ public class FeedElementCache {
 
     private final Map<String, Author> authorsMap;
 
+    private final ExecutorService executorService;
+
     public FeedElementCache(Executor executor, ApplicationContext applicationContext, PersonalFeed personalFeed) {
         this.executor = executor;
         this.applicationContext = applicationContext;
         this.personalFeed = personalFeed;
         this.eventMap = new LinkedHashMap<>();
         this.authorsMap = new LinkedHashMap<>();
+        executorService = Executors.newSingleThreadExecutor();
     }
 
-    public synchronized void add(Event event) {
+    @PreDestroy
+    void shutdown(){
+        executorService.shutdown();
+    }
+
+    public void add(Event event) {
+        executor.execute(() -> doAdd(event));
+    }
+
+    private synchronized void doAdd(Event event) {
         List<Event> events = eventMap.get(event.getData().getPubkey());
-        if(events == null){
+        if (events == null) {
             events = new ArrayList<>();
         }
         log.debug("Event list for {} now {}", event.getData().getPubkey(), events.size());
@@ -50,7 +65,11 @@ public class FeedElementCache {
         log.debug("Event cache now {}", eventMap.size());
     }
 
-    public synchronized void add(Author author) {
+    public void add(Author author) {
+        executor.execute(() -> doAdd(author));
+    }
+
+    private synchronized void doAdd(Author author) {
         authorsMap.put(author.getPubkey(), author);
         findMatches();
         log.debug("Authors cache now {}", authorsMap.size());
@@ -61,7 +80,7 @@ public class FeedElementCache {
         for (Map.Entry<String, List<Event>> e : eventMap.entrySet()) {
             Author author = authorsMap.get(e.getKey());
             if (author != null) {
-                for(Event event : e.getValue()){
+                for (Event event : e.getValue()) {
                     addContent(new FeedContentElement(event, author));
                 }
                 pubKeysToRemove.add(e.getKey());
@@ -74,6 +93,18 @@ public class FeedElementCache {
     }
 
     private void addContent(FeedContentElement feedContent) {
+        executorService.execute(() -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            doAddContent(feedContent);
+        });
+    }
+
+    private void doAddContent(FeedContentElement feedContent) {
+        log.debug("Adding Feed element");
         Platform.runLater(() -> {
             personalFeed.addElement(new FeedContentBox(executor, applicationContext.getBean(HostServices.class), feedContent));
         });
