@@ -9,7 +9,7 @@ logging:
     root: info
     parrhesia1000: debug
     parrhesia1000.SessionCallbackHandler: info
-    parrhesia1000.FeedElementCache: info
+#    parrhesia1000.FeedElementCache: info
     org:
       springframework:
         web: debug

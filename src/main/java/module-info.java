@@ -16,10 +16,13 @@ open module parrhesia {
     requires spring.context;
     requires spring.core;
     requires spring.web;
-    requires spring.websocket;
     requires lombok;
     requires org.apache.commons.io;
     requires org.threeten.extra;
+    requires spring.websocket;
+    requires org.apache.tomcat.embed.core;
+    requires org.apache.tomcat.embed.el;
+    requires org.apache.tomcat.embed.websocket;
     exports parrhesia1000;
     exports parrhesia1000.dto;
     exports parrhesia1000.ui;
