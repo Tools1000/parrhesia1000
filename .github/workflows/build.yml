@@ -111,4 +111,4 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/drkodi*.dmg
+            target/*.dmg
