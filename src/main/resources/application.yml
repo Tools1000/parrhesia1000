@@ -22,6 +22,8 @@ app:
       parent: ${user.home}
       dir: ${app.settings.parent}/.${app.name}
       log-file: ${app.settings.dir}/${app.name}.log
+  feed:
+    delay: 1000
   ui:
     appTitle: "Parrhesia1000"
     initialWidth: 800

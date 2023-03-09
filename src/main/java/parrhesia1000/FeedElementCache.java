@@ -27,6 +27,8 @@ public class FeedElementCache {
 
     private final ApplicationContext applicationContext;
 
+    private final AppConfig appConfig;
+
     private final PersonalFeed personalFeed;
 
     private final Map<String, List<Event>> eventMap;
@@ -35,9 +37,10 @@ public class FeedElementCache {
 
     private final ExecutorService executorService;
 
-    public FeedElementCache(Executor executor, ApplicationContext applicationContext, PersonalFeed personalFeed) {
+    public FeedElementCache(Executor executor, ApplicationContext applicationContext, AppConfig appConfig, PersonalFeed personalFeed) {
         this.executor = executor;
         this.applicationContext = applicationContext;
+        this.appConfig = appConfig;
         this.personalFeed = personalFeed;
         this.eventMap = new LinkedHashMap<>();
         this.authorsMap = new LinkedHashMap<>();
@@ -95,7 +98,7 @@ public class FeedElementCache {
     private void addContent(FeedContentElement feedContent) {
         executorService.execute(() -> {
             try {
-                Thread.sleep(3000);
+                Thread.sleep(appConfig.getFeed().getDelay());
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

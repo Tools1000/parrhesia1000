@@ -12,4 +12,6 @@ public class AppConfig {
     private boolean debug = true;
 
     private String pub;
+
+    private Feed feed;
 }
