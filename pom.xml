@@ -17,7 +17,7 @@
         <github-user>tools1000</github-user>
         <github-repo>parrhesia1000</github-repo>
         <main-class>parrhesia1000.Launcher</main-class>
-        <codesignjava.version>3.0.2</codesignjava.version>
+        <codesignjava.version>3.1.0-SNAPSHOT</codesignjava.version>
         <java.version>17</java.version>
         <javafx.version>19.0.2.1</javafx.version>
         <spring-boot.version>3.0.4</spring-boot.version>
@@ -100,6 +100,18 @@
             <artifactId>commons-io</artifactId>
             <version>2.11.0</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.github.tools1000.codesignjava</groupId>-->
+<!--            <artifactId>codesignjava</artifactId>-->
+<!--            <version>${codesignjava.version}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>io.github.tools1000.codesignjava</groupId>-->
+<!--            <artifactId>codesignjava-maven-plugin</artifactId>-->
+<!--            <version>${codesignjava.version}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
@@ -161,6 +173,17 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>9.4</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
 
@@ -194,15 +217,17 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.ow2.asm</groupId>
-                            <artifactId>asm</artifactId>
-                            <version>9.4</version>
-                        </dependency>
-                    </dependencies>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <executions>
+                        <execution>
+                            <id>parse-version</id>
+                            <goals>
+                                <goal>parse-version</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </build>
@@ -215,19 +240,6 @@
             <build>
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>3.3.0</version>
-                        <executions>
-                            <execution>
-                                <id>parse-version</id>
-                                <goals>
-                                    <goal>parse-version</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <groupId>io.github.tools1000.codesignjava</groupId>
                         <artifactId>codesignjava-maven-plugin</artifactId>
@@ -243,7 +255,8 @@
                         <configuration>
                             <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
                                 java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
-                                javafx.controls, javafx.fxml, java.sql, java.naming, java.security.jgss, java.rmi, java.management
+                                javafx.controls, javafx.fxml, java.sql, java.naming, java.security.jgss,
+                                java.rmi, java.management, jdk.security.jgss, jdk.crypto.cryptoki, jdk.crypto.ec
                             </jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
@@ -251,7 +264,65 @@
 
                             <moduleName>Parrhesia1000</moduleName>
                             <packageIdentifier>app.parrhesia1000</packageIdentifier>
-                            <moduleStarter>parrhesia/parrhesia1000.Launcher</moduleStarter>
+                            <moduleStarter>parrhesia1000/parrhesia1000.Launcher</moduleStarter>
+                            <macDeveloperId>${MAC_DEVELOPER_ID}</macDeveloperId>
+                            <macKeychainProfile>notary-profile</macKeychainProfile>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.coderplus.maven.plugins</groupId>
+                        <artifactId>copy-rename-maven-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>rename-dmg</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceFile>target/appdir/Parrhesia1000-1.0.0.dmg</sourceFile>
+                                    <destinationFile>target/${project.artifactId}-${javafx.platform}-${project.version}.dmg</destinationFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>macosx-aarch64</id>
+            <properties>
+                <javafx.platform>mac-aarch64</javafx.platform>
+            </properties>
+            <build>
+                <finalName>${project.artifactId}-${javafx.platform}</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.tools1000.codesignjava</groupId>
+                        <artifactId>codesignjava-maven-plugin</artifactId>
+                        <version>${codesignjava.version}</version>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <goals>
+                                    <goal>package-and-codesign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
+                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
+                                javafx.controls, javafx.fxml, java.sql, java.naming, java.security.jgss,
+                                java.rmi, java.management, jdk.security.jgss, jdk.crypto.cryptoki, jdk.crypto.ec
+                            </jreModuleNames>
+                            <jreModules>${project.build.directory}/mods</jreModules>
+                            <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
+                            <appVersion>1.0.0</appVersion>
+
+                            <moduleName>Parrhesia1000</moduleName>
+                            <packageIdentifier>app.parrhesia1000</packageIdentifier>
+                            <moduleStarter>parrhesia1000/parrhesia1000.Launcher</moduleStarter>
                             <macDeveloperId>${MAC_DEVELOPER_ID}</macDeveloperId>
                             <macKeychainProfile>notary-profile</macKeychainProfile>
                         </configuration>

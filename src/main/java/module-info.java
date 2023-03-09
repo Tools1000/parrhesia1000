@@ -1,4 +1,4 @@
-open module parrhesia {
+open module parrhesia1000 {
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
     requires javafx.base;
