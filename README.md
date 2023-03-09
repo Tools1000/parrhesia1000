@@ -10,4 +10,8 @@
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Tools1000_parrhesia1000&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Tools1000_parrhesia1000)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Tools1000_parrhesia1000&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Tools1000_parrhesia1000)
 
+> _Parrhesia_
+> 
+> In rhetoric, parrhesia is candid speech, speaking freely. It implies not only freedom of speech, but the obligation to speak the truth for the common good, even at personal risk. [Wikipedia](https://en.wikipedia.org/wiki/Parrhesia)
+
 A JavaFX [nostr](https://nostr.com/) client.
