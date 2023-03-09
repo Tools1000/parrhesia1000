@@ -318,10 +318,9 @@
                             </jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
-                            <appVersion>1.0.0</appVersion>
-
-                            <moduleName>Parrhesia1000</moduleName>
                             <packageIdentifier>app.parrhesia1000</packageIdentifier>
+                            <appVersion>1.0.0</appVersion>
+                            <moduleName>Parrhesia1000</moduleName>
                             <moduleStarter>parrhesia1000/parrhesia1000.Launcher</moduleStarter>
                             <macDeveloperId>${MAC_DEVELOPER_ID}</macDeveloperId>
                             <macKeychainProfile>notary-profile</macKeychainProfile>
@@ -344,6 +343,45 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>linux-x86_64</id>
+            <properties>
+                <javafx.platform>linux</javafx.platform>
+            </properties>
+            <build>
+                <finalName>${project.artifactId}-${javafx.platform}</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.tools1000.codesignjava</groupId>
+                        <artifactId>codesignjava-maven-plugin</artifactId>
+                        <version>${codesignjava.version}</version>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <goals>
+                                    <goal>package-and-codesign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
+                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
+                                javafx.controls, javafx.fxml, java.sql, java.naming, java.security.jgss,
+                                java.rmi, java.management, jdk.security.jgss, jdk.crypto.cryptoki
+                            </jreModuleNames>
+                            <jreModules>${project.build.directory}/mods</jreModules>
+                            <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
+                            <appVersion>1.0.0</appVersion>
+                            <moduleName>Parrhesia1000</moduleName>
+                            <moduleStarter>parrhesia1000/parrhesia1000.Launcher</moduleStarter>
+                            <linuxDebMaintainer>alexkerner1000@gmail.com</linuxDebMaintainer>
+                            <linuxMenuGroup>Parrhesia1000</linuxMenuGroup>
+                            <resourceDir>${basedir}/dist/linux/debian</resourceDir>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
