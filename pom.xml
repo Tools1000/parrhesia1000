@@ -383,7 +383,7 @@
                             <moduleStarter>${module-starter}</moduleStarter>
                             <linuxDebMaintainer>alexkerner1000@gmail.com</linuxDebMaintainer>
                             <linuxMenuGroup>Parrhesia1000</linuxMenuGroup>
-                            <resourceDir>${basedir}/dist/linux/debian</resourceDir>
+<!--                            <resourceDir>${basedir}/dist/linux/debian</resourceDir>-->
                         </configuration>
                     </plugin>
                 </plugins>
@@ -414,7 +414,7 @@
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
                             <appVersion>${app-version}</appVersion>
-                            <resourceDir>${basedir}/dist/windows</resourceDir>
+<!--                            <resourceDir>${basedir}/dist/windows</resourceDir>-->
                             <moduleName>${module-name}</moduleName>
                             <moduleStarter>${module-starter}</moduleStarter>
                             <winUpgradeUuid>bbc0f390-be79-11ed-afa1-0242ac120002</winUpgradeUuid>
@@ -448,7 +448,7 @@
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
                             <appVersion>${app-version}</appVersion>
-                            <resourceDir>${basedir}/dist/windows</resourceDir>
+<!--                            <resourceDir>${basedir}/dist/windows</resourceDir>-->
                             <moduleName>Parrhesia1000</moduleName>
                             <moduleStarter>${module-starter}</moduleStarter>
                             <moduleName>${module-name}</moduleName>
