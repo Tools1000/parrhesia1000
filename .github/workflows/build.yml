@@ -112,3 +112,26 @@ jobs:
           if-no-files-found: error
           path: |
             target/*.dmg
+
+  draft_release:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    name: Draft a Release
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.ref, 'refs/tags/drkodi-version-')
+    needs: [build_macos_x86_64]
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: artifact
+      - name: Draft Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          files: |
+            *.zip
+            *.dmg
+            *.msi
+            *.deb
+          fail_on_unmatched_files: true
