@@ -35,6 +35,13 @@
         <package-identifier>app.parrhesia1000</package-identifier>
     </properties>
 
+    <scm>
+        <connection>scm:git:https://github.com/${github-user}/${github-repo}.git</connection>
+        <developerConnection>scm:git:git@github.com:${github-user}/${github-repo}.git</developerConnection>
+        <url>https://github.com/${github-user}/${github-repo}</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <pluginRepositories>
         <pluginRepository>
             <id>ossrh</id>
