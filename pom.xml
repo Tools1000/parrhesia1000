@@ -23,7 +23,16 @@
         <spring-boot.version>3.0.4</spring-boot.version>
         <spring-cloud.version>3.1.14</spring-cloud.version>
         <codesignjava.version>3.0.2</codesignjava.version>
-        <modularGroupIds>org.openjfx</modularGroupIds>
+        <modular-group-ids>org.openjfx</modular-group-ids>
+        <jre-module-names>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
+            java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
+            javafx.controls, javafx.fxml, java.sql, java.naming, java.security.jgss,
+            java.rmi, java.management, jdk.security.jgss, jdk.crypto.cryptoki
+        </jre-module-names>
+        <app-version>1.0.0</app-version>
+        <module-name>Parrhesia1000</module-name>
+        <module-starter>parrhesia1000/parrhesia1000.Launcher</module-starter>
+        <package-identifier>app.parrhesia1000</package-identifier>
     </properties>
 
     <dependencies>
@@ -154,7 +163,7 @@
                         <configuration>
                             <overWriteIfNewer>true</overWriteIfNewer>
                             <includeScope>runtime</includeScope>
-                            <includeGroupIds>${modularGroupIds}</includeGroupIds>
+                            <includeGroupIds>${modular-group-ids}</includeGroupIds>
                             <outputDirectory>${project.build.directory}/mods</outputDirectory>
                         </configuration>
                     </execution>
@@ -167,7 +176,7 @@
                         <configuration>
                             <overWriteIfNewer>true</overWriteIfNewer>
                             <includeScope>runtime</includeScope>
-                            <excludeGroupIds>${modularGroupIds}</excludeGroupIds>
+                            <excludeGroupIds>${modular-group-ids}</excludeGroupIds>
                             <outputDirectory>${project.build.directory}/libs</outputDirectory>
                         </configuration>
                     </execution>
@@ -253,18 +262,13 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
-                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
-                                javafx.controls, javafx.fxml, java.sql, java.naming, java.security.jgss,
-                                java.rmi, java.management, jdk.security.jgss, jdk.crypto.cryptoki
-                            </jreModuleNames>
+                            <jreModuleNames>${jre-module-names}</jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
-                            <appVersion>1.0.0</appVersion>
-
-                            <moduleName>Parrhesia1000</moduleName>
-                            <packageIdentifier>app.parrhesia1000</packageIdentifier>
-                            <moduleStarter>parrhesia1000/parrhesia1000.Launcher</moduleStarter>
+                            <appVersion>${app-version}</appVersion>
+                            <moduleName>${module-name}</moduleName>
+                            <packageIdentifier>${package-identifier}</packageIdentifier>
+                            <moduleStarter>${module-starter}</moduleStarter>
                             <macDeveloperId>${MAC_DEVELOPER_ID}</macDeveloperId>
                             <macKeychainProfile>notary-profile</macKeychainProfile>
                         </configuration>
@@ -311,17 +315,13 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
-                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
-                                javafx.controls, javafx.fxml, java.sql, java.naming, java.security.jgss,
-                                java.rmi, java.management, jdk.security.jgss, jdk.crypto.cryptoki
-                            </jreModuleNames>
+                            <jreModuleNames>${jre-module-names}</jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
-                            <packageIdentifier>app.parrhesia1000</packageIdentifier>
-                            <appVersion>1.0.0</appVersion>
-                            <moduleName>Parrhesia1000</moduleName>
-                            <moduleStarter>parrhesia1000/parrhesia1000.Launcher</moduleStarter>
+                            <packageIdentifier>${package-identifier}</packageIdentifier>
+                            <appVersion>${app-version}</appVersion>
+                            <moduleName>${module-name}</moduleName>
+                            <moduleStarter>${module-starter}</moduleStarter>
                             <macDeveloperId>${MAC_DEVELOPER_ID}</macDeveloperId>
                             <macKeychainProfile>notary-profile</macKeychainProfile>
                         </configuration>
@@ -368,16 +368,12 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
-                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
-                                javafx.controls, javafx.fxml, java.sql, java.naming, java.security.jgss,
-                                java.rmi, java.management, jdk.security.jgss, jdk.crypto.cryptoki
-                            </jreModuleNames>
+                            <jreModuleNames>${jre-module-names}</jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
-                            <appVersion>1.0.0</appVersion>
-                            <moduleName>Parrhesia1000</moduleName>
-                            <moduleStarter>parrhesia1000/parrhesia1000.Launcher</moduleStarter>
+                            <appVersion>${app-version}</appVersion>
+                            <moduleName>${module-name}</moduleName>
+                            <moduleStarter>${module-starter}</moduleStarter>
                             <linuxDebMaintainer>alexkerner1000@gmail.com</linuxDebMaintainer>
                             <linuxMenuGroup>Parrhesia1000</linuxMenuGroup>
                             <resourceDir>${basedir}/dist/linux/debian</resourceDir>
@@ -407,17 +403,50 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
-                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
-                                javafx.controls, javafx.fxml, java.sql, java.naming, java.security.jgss,
-                                java.rmi, java.management, jdk.security.jgss, jdk.crypto.cryptoki
-                            </jreModuleNames>
+                            <jreModuleNames>${jre-module-names}</jreModuleNames>
+                            <jreModules>${project.build.directory}/mods</jreModules>
+                            <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
+                            <appVersion>${app-version}</appVersion>
+                            <resourceDir>${basedir}/dist/windows</resourceDir>
+                            <moduleName>${module-name}</moduleName>
+                            <moduleStarter>${module-starter}</moduleStarter>
+                            <winUpgradeUuid>bbc0f390-be79-11ed-afa1-0242ac120002</winUpgradeUuid>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>windows-aarch64</id>
+            <properties>
+                <javafx.platform>win-aarch64</javafx.platform>
+            </properties>
+            <build>
+                <finalName>${project.artifactId}-${javafx.platform}</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.tools1000.codesignjava</groupId>
+                        <artifactId>codesignjava-maven-plugin</artifactId>
+                        <version>${codesignjava.version}</version>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <goals>
+                                    <goal>package-and-codesign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <jreModuleNames>${jre-module-names}</jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
                             <appVersion>1.0.0</appVersion>
+                            <appVersion>${app-version}</appVersion>
                             <resourceDir>${basedir}/dist/windows</resourceDir>
                             <moduleName>Parrhesia1000</moduleName>
                             <moduleStarter>parrhesia1000/parrhesia1000.Launcher</moduleStarter>
+                            <moduleName>${module-name}</moduleName>
+                            <moduleStarter>${module-starter}</moduleStarter>
                             <winUpgradeUuid>bbc0f390-be79-11ed-afa1-0242ac120002</winUpgradeUuid>
                         </configuration>
                     </plugin>
