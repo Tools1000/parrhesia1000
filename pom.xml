@@ -440,11 +440,10 @@
                             <jreModuleNames>${jre-module-names}</jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
-                            <appVersion>1.0.0</appVersion>
                             <appVersion>${app-version}</appVersion>
                             <resourceDir>${basedir}/dist/windows</resourceDir>
                             <moduleName>Parrhesia1000</moduleName>
-                            <moduleStarter>parrhesia1000/parrhesia1000.Launcher</moduleStarter>
+                            <moduleStarter>${module-starter}</moduleStarter>
                             <moduleName>${module-name}</moduleName>
                             <moduleStarter>${module-starter}</moduleStarter>
                             <winUpgradeUuid>bbc0f390-be79-11ed-afa1-0242ac120002</winUpgradeUuid>
