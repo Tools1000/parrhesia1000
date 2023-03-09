@@ -22,7 +22,7 @@
         <javafx.version>19.0.2.1</javafx.version>
         <spring-boot.version>3.0.4</spring-boot.version>
         <spring-cloud.version>3.1.14</spring-cloud.version>
-        <codesignjava.version>3.0.2</codesignjava.version>
+        <codesignjava.version>3.1.0-SNAPSHOT</codesignjava.version>
         <modular-group-ids>org.openjfx</modular-group-ids>
         <jre-module-names>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
             java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
