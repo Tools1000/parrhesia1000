@@ -35,6 +35,13 @@
         <package-identifier>app.parrhesia1000</package-identifier>
     </properties>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
