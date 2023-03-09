@@ -100,9 +100,6 @@ jobs:
           # set up notary
           xcrun notarytool store-credentials notary-profile --key-id "$MAC_API_KEY_ID" --issuer "$MAC_API_ISSUER_ID" --key "$MAC_API_KEY_PATH"
 
-      #      - name: Print environment
-      #        uses: hmarr/debug-action@v2
-
       - name: Build
         run: mvn -B -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64,all -Djavafx.platform=mac package
 
@@ -113,13 +110,42 @@ jobs:
           path: |
             target/*.dmg
 
+  build_windows_x86_64:
+    needs: [compile_and_test]
+    name: Build Windows x86_64 App
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: windows-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: 'maven'
+          distribution: 'temurin'
+
+      - name: Build
+        run: mvn -B -DskipTests -Dmaven.javadoc.skip=true -Pwindows-x86_64,all -Djavafx.platform=win package
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          if-no-files-found: error
+          path: |
+            target/appdir/*.msi
+
   draft_release:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     name: Draft a Release
     runs-on: ubuntu-latest
     if: startsWith(github.event.ref, 'refs/tags/parrhesia*-version-')
-    needs: [build_macos_x86_64]
+    needs: [build_macos_x86_64, build_windows_x86_64]
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v3

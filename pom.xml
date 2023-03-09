@@ -348,6 +348,44 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>windows-x86_64</id>
+            <properties>
+                <javafx.platform>win</javafx.platform>
+            </properties>
+            <build>
+                <finalName>${project.artifactId}-${javafx.platform}</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.tools1000.codesignjava</groupId>
+                        <artifactId>codesignjava-maven-plugin</artifactId>
+                        <version>${codesignjava.version}</version>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <goals>
+                                    <goal>package-and-codesign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
+                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
+                                javafx.controls, javafx.fxml, java.sql, java.naming, java.security.jgss,
+                                java.rmi, java.management, jdk.security.jgss, jdk.crypto.cryptoki
+                            </jreModuleNames>
+                            <jreModules>${project.build.directory}/mods</jreModules>
+                            <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
+                            <appVersion>1.0.0</appVersion>
+                            <resourceDir>${basedir}/dist/windows</resourceDir>
+                            <moduleName>Parrhesia1000</moduleName>
+                            <moduleStarter>parrhesia1000/parrhesia1000.Launcher</moduleStarter>
+                            <winUpgradeUuid>bbc0f390-be79-11ed-afa1-0242ac120002</winUpgradeUuid>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>
