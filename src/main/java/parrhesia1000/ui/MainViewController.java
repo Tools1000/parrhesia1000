@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuBar;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,9 @@ public class MainViewController extends DebuggableController implements Initiali
     public VBox root;
 
     @FXML
+    MenuBar menuBar;
+
+    @FXML
     ListView<FeedContentBox> listView;
 
     public MainViewController(AppConfig appConfig, PersonalFeed personalFeed, ParrhesiaClient client) {
@@ -48,6 +52,9 @@ public class MainViewController extends DebuggableController implements Initiali
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        FXUtil.initAppMenu(menuBar);
+
         applyRandomColors(root, listViewBox, listView);
         listView.prefWidthProperty().bind(listViewBox.prefWidthProperty());
         listView.prefHeightProperty().bind(listViewBox.prefHeightProperty());
