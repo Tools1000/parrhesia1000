@@ -220,47 +220,7 @@ public class MainViewController extends DebuggableController implements Initiali
 
 
 
-    private Node buildFeedContent(String subscriptionId, List<String> authors, Feed feed, EventCache eventCache) {
-        StackPane stackPane = new StackPane();
-        ListView<FeedContentBox> listView = configureNewFeedListView(buildNewFeedListView());
-        Bindings.bindContent(listView.getItems(), feed.getFeedContent());
-        Button loadNewerButton = new Button("Load newer");
-        Button loadOlderButton = new Button("Load older");
-        Button loadMoreButton = new Button("Load more");
-        eventCache.elementsProperty().sizeProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if(appConfig.isDebug())
-                    loadMoreButton.setText("Load more (" + newValue + ")");
-            }
-        });
-        loadMoreButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                loadMoreFeedPosts(feed, eventCache);
-            }
-        });
 
-        loadOlderButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                handleLoadOlderPosts(subscriptionId, authors);
-            }
-        });
-
-        loadMoreButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty().not());
-        loadNewerButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty());
-        loadOlderButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty());
-
-        stackPane.getChildren().add(UiUtil.applyDebug(listView, appConfig.isDebug()));
-        stackPane.getChildren().add(UiUtil.applyDebug(loadMoreButton, true));
-        StackPane.setAlignment(loadMoreButton, Pos.TOP_CENTER);
-        stackPane.getChildren().add(UiUtil.applyDebug(loadNewerButton, true));
-        StackPane.setAlignment(loadNewerButton, Pos.TOP_CENTER);
-        stackPane.getChildren().add(UiUtil.applyDebug(loadOlderButton, true));
-        StackPane.setAlignment(loadOlderButton, Pos.BOTTOM_CENTER);
-        return stackPane;
-    }
 
     private Node buildPersonalFeedContent(String subscriptionId, List<String> authors, Feed feed, EventCache eventCache) {
         return buildFeedContent(subscriptionId, authors, feed, eventCache);
@@ -293,6 +253,61 @@ public class MainViewController extends DebuggableController implements Initiali
         }
         eventCache.elementsProperty().removeAll(list);
         log.debug("Feed size now {}", feed.getFeedContent().size());
+    }
+
+    private Node buildFeedContent(String subscriptionId, List<String> authors, Feed feed, EventCache eventCache) {
+        StackPane stackPane = new StackPane();
+        ListView<FeedContentBox> listView = configureNewFeedListView(buildNewFeedListView());
+        Bindings.bindContent(listView.getItems(), feed.getFeedContent());
+        Button loadNewerButton = new Button("Load newer");
+        Button loadOlderButton = new Button("Load older");
+        Button loadMoreButton = new Button("Load more");
+        Button loadMoreButton2 = new Button("Load more");
+        eventCache.elementsProperty().sizeProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(appConfig.isDebug()) {
+                    loadMoreButton.setText("Load more (" + newValue + ")");
+                    loadMoreButton2.setText("Load more (" + newValue + ")");
+                }
+            }
+        });
+        loadMoreButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                loadMoreFeedPosts(feed, eventCache);
+            }
+        });
+
+        loadMoreButton2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                loadMoreFeedPosts(feed, eventCache);
+            }
+        });
+
+        loadOlderButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                handleLoadOlderPosts(subscriptionId, authors);
+            }
+        });
+
+        loadMoreButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty().not());
+        loadMoreButton2.visibleProperty().bind(eventCache.elementsProperty().emptyProperty().not());
+        loadNewerButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty());
+        loadOlderButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty());
+
+        stackPane.getChildren().add(UiUtil.applyDebug(listView, appConfig.isDebug()));
+        stackPane.getChildren().add(UiUtil.applyDebug(loadMoreButton, true));
+        StackPane.setAlignment(loadMoreButton, Pos.TOP_CENTER);
+        stackPane.getChildren().add(UiUtil.applyDebug(loadMoreButton2, true));
+        StackPane.setAlignment(loadMoreButton2, Pos.BOTTOM_CENTER);
+        stackPane.getChildren().add(UiUtil.applyDebug(loadNewerButton, true));
+        StackPane.setAlignment(loadNewerButton, Pos.TOP_CENTER);
+        stackPane.getChildren().add(UiUtil.applyDebug(loadOlderButton, true));
+        StackPane.setAlignment(loadOlderButton, Pos.BOTTOM_CENTER);
+        return stackPane;
     }
 
     private ListView<FeedContentBox> configureNewFeedListView(ListView<FeedContentBox> listView){
