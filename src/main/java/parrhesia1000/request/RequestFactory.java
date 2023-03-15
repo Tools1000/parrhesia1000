@@ -1,6 +1,8 @@
 package parrhesia1000.request;
 
 import lombok.extern.slf4j.Slf4j;
+import parrhesia1000.ParrhesiaUtils;
+import parrhesia1000.TimeRange;
 import parrhesia1000.dto.CloseRequest;
 import parrhesia1000.dto.Filters;
 import parrhesia1000.dto.Request;
@@ -82,17 +84,31 @@ public class RequestFactory {
         return req;
     }
 
-    public static Request buildPublicFeedRequest() {
 
-        int lookbackSeconds = 1;
-        long seconds2 = System.currentTimeMillis() / 1000;
+
+
+
+    public static Request buildPublicFeedRequest(int lookBehindSeconds) {
+
+        long currentSeconds = System.currentTimeMillis() / 1000;
 
         Filters filters = new Filters();
         filters.setKinds(List.of(1));
-        filters.setSince((int) seconds2 - lookbackSeconds);
-//        filters.setUntil((int) seconds2);
+        filters.setSince((int) currentSeconds - lookBehindSeconds);
         Request req = new Request();
         req.setSubscriptionId(GLOBAL_FEED);
+        req.setFilters(filters);
+        return req;
+    }
+
+    public static Request buildFeedRequest(String subscriptionId, TimeRange range) {
+
+
+        Filters filters = new Filters();
+        filters.setSince((int) ParrhesiaUtils.getSecondsTimestampFromLocalDateTime(range.getEnd()));
+        filters.setUntil((int) ParrhesiaUtils.getSecondsTimestampFromLocalDateTime(range.getStart()));
+        Request req = new Request();
+        req.setSubscriptionId(subscriptionId);
         req.setFilters(filters);
         return req;
     }

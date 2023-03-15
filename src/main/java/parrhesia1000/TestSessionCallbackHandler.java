@@ -38,7 +38,7 @@ public class TestSessionCallbackHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("Connection established with session: {}", session);
-        requestSender.sendRequest(session, RequestFactory.buildPublicFeedRequest());
+        requestSender.sendRequest(session, RequestFactory.buildPublicFeedRequest(2));
     }
 
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
@@ -60,14 +60,14 @@ public class TestSessionCallbackHandler extends TextWebSocketHandler {
             return;
         }
 
-        LocalDateTime eventTime = ParrhesiaUtils.parse(event.getData().getCreatedAt());
+        LocalDateTime eventTime = ParrhesiaUtils.getLocalDateTimeFromTimestamp(event.getData().getCreatedAt());
         if(eventTime.isBefore(oldest)){
             oldest = eventTime;
         }
         if(eventTime.isAfter(newest)){
             newest = eventTime;
         }
-        log.debug("Oldest: {}, current: {}, newest: {}", oldest, ParrhesiaUtils.parse(event.getData().getCreatedAt()), newest);
+        log.debug("Oldest: {}, current: {}, newest: {}", oldest, ParrhesiaUtils.getLocalDateTimeFromTimestamp(event.getData().getCreatedAt()), newest);
 
         int wait = 0;
     }

@@ -3,6 +3,7 @@ package parrhesia1000.ui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import parrhesia1000.TimeRange;
 import parrhesia1000.ui.control.FeedContentBox;
 
 import java.util.Collection;
@@ -34,4 +35,6 @@ public class Feed {
     public ObservableList<FeedContentBox> getFeedContent() {
         return sortedListView;
     }
+
+
 }

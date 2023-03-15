@@ -6,28 +6,20 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.springframework.util.StringUtils;
 import parrhesia1000.AuthorCache;
-import parrhesia1000.LoadPictureTask;
-import parrhesia1000.config.AppConfig;
 import parrhesia1000.FeedContentElement;
+import parrhesia1000.config.AppConfig;
 import parrhesia1000.dto.Author;
 import parrhesia1000.ui.UiConfig;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executor;
 
 @Slf4j
@@ -93,7 +85,7 @@ public class AuthorBoxElement extends HBox {
             loadAuthorData(feedContentElement.getAuthor());
         }
 
-        timeLabel.setText(formatDuration(Duration.between(feedContentElement.getCreatedAt(), LocalDateTime.now())));
+        timeLabel.setText(getWordbasedDuration());
 
         getChildren().addAll(UiUtil.applyDebug(displayName, appConfig.isDebug()), UiUtil.applyDebug(name, appConfig.isDebug()), UiUtil.applyDebug(timeLabel, appConfig.isDebug()));
 
@@ -108,13 +100,15 @@ public class AuthorBoxElement extends HBox {
         name.setText("@" + author.getName());
     }
 
-    String getWordbasedDuration(){
-        Duration duration = Duration.between(feedContentElement.getCreatedAt(), LocalDateTime.now());
-        Duration truncatedDuration = duration.truncatedTo(ChronoUnit.SECONDS);
-        return formatDuration(truncatedDuration);
+    String getWordbasedDuration() {
+        if (appConfig.isDebug()) {
+            return formatDuration(Duration.between(feedContentElement.getCreatedAt(), LocalDateTime.now()));
+        } else {
+            return formatDurationSimple(Duration.between(feedContentElement.getCreatedAt(), LocalDateTime.now()));
+        }
     }
 
-    private String formatDuration(Duration duration) {
+    private String formatDurationSimple(Duration duration) {
         long days = duration.toDaysPart();
         if (days > 0) {
             return days + "d";
@@ -128,6 +122,29 @@ public class AuthorBoxElement extends HBox {
             return minutes + "m";
         }
         int seconds = duration.toSecondsPart();
-       return seconds + "s";
+        return seconds + "s";
+    }
+
+    private String formatDuration(Duration duration) {
+        List<String> parts = new ArrayList<>();
+        long days = duration.toDaysPart();
+        if (days > 0) {
+            parts.add(plural(days, "day"));
+        }
+        int hours = duration.toHoursPart();
+        if (hours > 0 || !parts.isEmpty()) {
+            parts.add(plural(hours, "hour"));
+        }
+        int minutes = duration.toMinutesPart();
+        if (minutes > 0 || !parts.isEmpty()) {
+            parts.add(plural(minutes, "minute"));
+        }
+        int seconds = duration.toSecondsPart();
+        parts.add(plural(seconds, "second"));
+        return String.join(", ", parts);
+    }
+
+    private String plural(long num, String unit) {
+        return num + " " + unit + (num == 1 ? "" : "s");
     }
 }

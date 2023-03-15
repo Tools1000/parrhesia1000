@@ -23,7 +23,7 @@ app:
   relays:
     - "wss://relay.damus.io"
     - "wss://eden.nostr.land"
-  debug: false
+  debug: true
   pub: 8531bb63dfbe216e140ed8507b38678f684ae67e0c06512abe5a19e50f0db1c3
   name: parrhesia1000
   settings:

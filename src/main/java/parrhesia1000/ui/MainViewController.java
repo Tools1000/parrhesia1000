@@ -1,6 +1,7 @@
 package parrhesia1000.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fx1000.FXUtil;
 import fx1000.UiUtil;
 import javafx.application.HostServices;
 import javafx.beans.binding.Bindings;
@@ -28,9 +29,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 import parrhesia1000.*;
 import parrhesia1000.config.AppConfig;
-import fx1000.FXUtil;
 import parrhesia1000.nostr.event.handler.AuthorCacheHandler;
-import parrhesia1000.nostr.event.handler.GlobalFeedHandler;
+import parrhesia1000.nostr.event.handler.GenericFeedHandler;
 import parrhesia1000.nostr.event.handler.PersonalFeedHandler;
 import parrhesia1000.request.RequestFactory;
 import parrhesia1000.request.RequestSender;
@@ -39,6 +39,10 @@ import parrhesia1000.ui.control.FeedContentBox;
 import tools1000.ToolsUtil;
 
 import java.net.URL;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
@@ -91,7 +95,9 @@ public class MainViewController extends DebuggableController implements Initiali
     @FXML
     ListView<FeedContentBox> listView;
 
-    public MainViewController(AppConfig appConfig, ApplicationContext applicationContext, ObjectMapper mapper, Executor executor, AppConfig appConfig1, UiConfig uiConfig, AuthorCache authorCache, ParrhesiaClient client, SessionCallbackHandler sessionCallbackHandler, RequestSender requestSender) {
+   private final TimeRangeMap timeRangeMap;
+
+    public MainViewController(AppConfig appConfig, ApplicationContext applicationContext, ObjectMapper mapper, Executor executor, AppConfig appConfig1, UiConfig uiConfig, AuthorCache authorCache, ParrhesiaClient client, SessionCallbackHandler sessionCallbackHandler, RequestSender requestSender, TimeRangeMap timeRangeMap) {
         super(appConfig);
         this.applicationContext = applicationContext;
         this.mapper = mapper;
@@ -102,6 +108,7 @@ public class MainViewController extends DebuggableController implements Initiali
         this.client = client;
         this.sessionCallbackHandler = sessionCallbackHandler;
         this.requestSender = requestSender;
+        this.timeRangeMap = timeRangeMap;
         sessionCallbackHandler.getEventHandlerList().add(new AuthorCacheHandler(mapper,appConfig, authorCache, applicationContext, executor));
     }
 
@@ -131,6 +138,11 @@ public class MainViewController extends DebuggableController implements Initiali
 
 
 
+        connect();
+
+    }
+
+    private void connect(){
         log.debug("Initialization done, connecting");
         client.connect(sessionCallbackHandler);
     }
@@ -148,23 +160,27 @@ public class MainViewController extends DebuggableController implements Initiali
     }
 
     private Tab buildGlobalFeedTab(String tabName) {
+        return buildFeedTab(tabName, RequestFactory.GLOBAL_FEED, Collections.emptyList());
+    }
+
+    private Tab buildFeedTab(String tabName, String subscriptionId, List<String> authors) {
         Feed feed = new Feed();
         EventCache eventCache = new EventCache();
         Tab tab = new Tab(tabName);
-        tab.setContent(buildGlobalFeedContent(feed, eventCache));
-        sessionCallbackHandler.getEventHandlerList().add(new GlobalFeedHandler(mapper, appConfig,applicationContext, eventCache, authorCache, feed, requestSender));
+        tab.setContent(buildGlobalFeedContent(subscriptionId, authors, feed, eventCache));
+        sessionCallbackHandler.getEventHandlerList().add(new GenericFeedHandler(mapper, appConfig,subscriptionId, authorCache, requestSender, eventCache));
         tab.setOnClosed(new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
-                requestSender.sendRequest(client.getSession(), RequestFactory.stopRequestRequest(RequestFactory.GLOBAL_FEED));
+                requestSender.sendRequest(client.getSession(), RequestFactory.stopRequestRequest(subscriptionId));
             }
         });
         return tab;
     }
 
     private Tab buildNewTab(String tabName) {
-        Feed personalFeed = new Feed();
-        EventCache personalEventCache = new EventCache();
+        Feed feed = new Feed();
+        EventCache eventCache = new EventCache();
         Tab tab = new Tab(tabName);
         VBox content = new VBox(4);
         Label label = new Label("Enter pub key");
@@ -178,12 +194,18 @@ public class MainViewController extends DebuggableController implements Initiali
             public void handle(ActionEvent event) {
                 String pubKey = textField.getText().trim();
                 pubKey = StringUtils.abbreviateMiddle(pubKey, "..", 14);
-                log.debug("Adding tab for {}", pubKey);
-                tab.setContent(buildPersonalFeedContent(personalFeed, personalEventCache));
-                tab.setText(pubKey);
                 String subId = "feed-for-" + pubKey;
-                sessionCallbackHandler.getEventHandlerList().add(new PersonalFeedHandler(mapper, appConfig,subId,authorCache, requestSender, personalEventCache));
-                requestSender.sendRequest(client.getSession(), RequestFactory.buildPersonalFeedRequest(subId, List.of(Bech32ToHexString.decode(textField.getText().trim())),appConfig.getFeed().getPersonal().getLookBehindSeconds()));
+                log.debug("Adding tab for {}", pubKey);
+                tab.setContent(buildPersonalFeedContent(subId, List.of(Bech32ToHexString.decode(textField.getText().trim())), feed, eventCache));
+                tab.setText(pubKey);
+                timeRangeMap.getMap().put(subId, new TimeRange(LocalDateTime.now(), LocalDateTime.now().minusHours(1)));
+                sessionCallbackHandler.getEventHandlerList().add(new PersonalFeedHandler(mapper, appConfig,subId,authorCache, requestSender, eventCache));
+//                TimeRange timeRange = timeRangeMap.getMap().getOrDefault(subId, new TimeRange());
+//                if(client.getSession().isOpen()){
+//                    requestSender.sendRequest(client.getSession(), RequestFactory.buildFeedRequest(subId ,timeRange).addAuthorsFilter(List.of(Bech32ToHexString.decode(textField.getText().trim()))).addKindsFilter(List.of(1)));
+//                } else {
+//                    log.debug("Not connected");
+//                }
 
             }
         });
@@ -196,58 +218,79 @@ public class MainViewController extends DebuggableController implements Initiali
         return tab;
     }
 
-    private Node buildGlobalFeedContent(Feed feed, EventCache eventCache) {
+
+
+    private Node buildFeedContent(String subscriptionId, List<String> authors, Feed feed, EventCache eventCache) {
         StackPane stackPane = new StackPane();
         ListView<FeedContentBox> listView = configureNewFeedListView(buildNewFeedListView());
         Bindings.bindContent(listView.getItems(), feed.getFeedContent());
-        Button loadButton = new Button("Load more");
+        Button loadNewerButton = new Button("Load newer");
+        Button loadOlderButton = new Button("Load older");
+        Button loadMoreButton = new Button("Load more");
         eventCache.elementsProperty().sizeProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if(appConfig.isDebug())
-                    loadButton.setText("Load more (" + newValue + ")");
+                    loadMoreButton.setText("Load more (" + newValue + ")");
             }
         });
-        loadButton.setOnAction(new EventHandler<ActionEvent>() {
+        loadMoreButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                handleLoadNewFeedPosts(feed, eventCache);
+                loadMoreFeedPosts(feed, eventCache);
             }
         });
-        loadButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty().not());
+
+        loadOlderButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                handleLoadOlderPosts(subscriptionId, authors);
+            }
+        });
+
+        loadMoreButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty().not());
+        loadNewerButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty());
+        loadOlderButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty());
+
         stackPane.getChildren().add(UiUtil.applyDebug(listView, appConfig.isDebug()));
-        stackPane.getChildren().add(UiUtil.applyDebug(loadButton, true));
-        StackPane.setAlignment(loadButton, Pos.TOP_CENTER);
+        stackPane.getChildren().add(UiUtil.applyDebug(loadMoreButton, true));
+        StackPane.setAlignment(loadMoreButton, Pos.TOP_CENTER);
+        stackPane.getChildren().add(UiUtil.applyDebug(loadNewerButton, true));
+        StackPane.setAlignment(loadNewerButton, Pos.TOP_CENTER);
+        stackPane.getChildren().add(UiUtil.applyDebug(loadOlderButton, true));
+        StackPane.setAlignment(loadOlderButton, Pos.BOTTOM_CENTER);
         return stackPane;
     }
 
-    private Node buildPersonalFeedContent(Feed feed, EventCache eventCache) {
-        StackPane stackPane = new StackPane();
-        ListView<FeedContentBox> listView = configureNewFeedListView(buildNewFeedListView());
-        Bindings.bindContent(listView.getItems(), feed.getFeedContent());
-        Button loadButton = new Button("Load more");
-        eventCache.elementsProperty().sizeProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if(appConfig.isDebug())
-                    loadButton.setText("Load more (" + newValue + ")");
-            }
-        });
-        loadButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                handleLoadNewFeedPosts(feed, eventCache);
-            }
-        });
-        loadButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty().not());
-        stackPane.getChildren().add(UiUtil.applyDebug(listView, appConfig.isDebug()));
-        stackPane.getChildren().add(UiUtil.applyDebug(loadButton, true));
-        StackPane.setAlignment(loadButton, Pos.TOP_CENTER);
-        return stackPane;
+    private Node buildPersonalFeedContent(String subscriptionId, List<String> authors, Feed feed, EventCache eventCache) {
+        return buildFeedContent(subscriptionId, authors, feed, eventCache);
     }
 
-    private ListView<FeedContentBox> buildNewFeedListView() {
-        return new ListView<>();
+    private Node buildGlobalFeedContent(String subscriptionId, List<String> authors, Feed feed, EventCache eventCache) {
+        return buildFeedContent(subscriptionId, authors,  feed, eventCache);
+    }
+
+    public void handleLoadOlderPosts(String subscriptionId, List<String> authors) {
+        TimeRange timeRange = timeRangeMap.getMap().getOrDefault(subscriptionId, new TimeRange());
+        requestSender.sendRequest(client.getSession(), RequestFactory.buildFeedRequest(subscriptionId, timeRange).addKindsFilter(List.of(1)).addAuthorsFilter(authors));
+        TimeRange timeRangeNew;
+        if(authors != null && !authors.isEmpty()){
+            timeRangeNew = timeRange.updateEnd(Duration.of(1, ChronoUnit.DAYS));
+        } else {
+            timeRangeNew = timeRange.updateEnd();
+        }
+        timeRangeMap.getMap().put(subscriptionId, timeRangeNew);
+        log.debug("Loading older posts, old time range: {}, new time range {}", timeRange, timeRangeNew);
+    }
+
+    public void loadMoreFeedPosts(Feed feed, EventCache eventCache) {
+        List<FeedContentElement> list = ToolsUtil.getSubList(eventCache.getElements(), 20);
+        log.debug("Adding {} new posts", list.size());
+        for (FeedContentElement e : list) {
+            feed.addElement(new FeedContentBox(executor, appConfig, uiConfig, applicationContext.getBean(HostServices.class), e, authorCache));
+        }
+        eventCache.elementsProperty().removeAll(list);
+        log.debug("Feed size now {}", feed.getFeedContent().size());
     }
 
     private ListView<FeedContentBox> configureNewFeedListView(ListView<FeedContentBox> listView){
@@ -276,24 +319,18 @@ public class MainViewController extends DebuggableController implements Initiali
         return listView;
     }
 
-    public void handleLoadNewFeedPosts(Feed feed, EventCache eventCache) {
-        List<FeedContentElement> list = ToolsUtil.getSubList(eventCache.getElements(), 20);
-        log.debug("Adding {} new posts", list.size());
-        for (FeedContentElement e : list) {
-            feed.addElement(new FeedContentBox(executor, appConfig, uiConfig, applicationContext.getBean(HostServices.class), e, authorCache));
-        }
-        eventCache.elementsProperty().removeAll(list);
-        log.debug("Feed size now {}", feed.getFeedContent().size());
+    private ListView<FeedContentBox> buildNewFeedListView() {
+        return new ListView<>();
     }
 
     @Override
     public void connected(WebSocketSession session) {
-        // global feed always active
-        requestSender.sendRequest(session, RequestFactory.buildPublicFeedRequest());
+        log.debug("Connected");
+
     }
 
     @Override
     public void disconnected(WebSocketSession session) {
-
+        log.debug("Disconnected");
     }
 }
