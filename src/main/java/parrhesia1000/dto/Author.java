@@ -23,4 +23,6 @@ public class Author {
     private String pubkey;
 
     private String banner;
+
+    private String picture;
 }

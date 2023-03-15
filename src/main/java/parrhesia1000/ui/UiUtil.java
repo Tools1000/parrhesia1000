@@ -21,7 +21,7 @@
 package parrhesia1000.ui;
 
 import javafx.scene.Node;
-import parrhesia1000.AppConfig;
+import parrhesia1000.config.AppConfig;
 
 import java.util.Locale;
 import java.util.Random;
@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 
 
 /**
+ * @deprecated
  * Move to commons
  */
 public class UiUtil {

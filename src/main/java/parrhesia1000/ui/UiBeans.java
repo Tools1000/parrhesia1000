@@ -20,6 +20,7 @@
 package parrhesia1000.ui;
 
 
+import fx1000.GeneralExceptionHandler;
 import javafx.scene.Node;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
@@ -85,4 +86,6 @@ public class UiBeans {
         log.debug("Locale: {}", locale);
         return ResourceBundle.getBundle("i18n/messages", locale);
     }
+
+
 }

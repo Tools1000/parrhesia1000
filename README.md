@@ -15,3 +15,6 @@
 > In rhetoric, parrhesia is candid speech, speaking freely. It implies not only freedom of speech, but the obligation to speak the truth for the common good, even at personal risk. [Wikipedia](https://en.wikipedia.org/wiki/Parrhesia)
 
 A JavaFX [nostr](https://nostr.com/) client.
+
+## Screens
+

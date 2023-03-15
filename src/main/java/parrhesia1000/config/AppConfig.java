@@ -1,17 +1,26 @@
-package parrhesia1000;
+package parrhesia1000.config;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@Data
+import java.util.List;
+
+@Getter
+@Setter
+@ToString
 @ConfigurationProperties(prefix = "app")
 @Configuration
 public class AppConfig {
 
-    private boolean debug = true;
+    private List<String> relays;
+
+    private boolean debug;
 
     private String pub;
 
-    private Feed feed;
+    private FeedConfig feed;
+
+    private Cache cache;
+
 }

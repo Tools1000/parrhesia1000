@@ -232,6 +232,10 @@
     -fx-padding: 3;
 }
 
+.tab {
+    -fx-pref-width: 140
+}
+
 
 
 

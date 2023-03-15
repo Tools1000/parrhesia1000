@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import parrhesia1000.event.Event;
+import parrhesia1000.nostr.event.Event;
 
 import java.io.IOException;
 import java.nio.file.Files;

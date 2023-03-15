@@ -30,7 +30,7 @@
         </jre-module-names>
         <app-version>1.0.0</app-version>
         <module-name>Parrhesia1000</module-name>
-        <module-starter>parrhesia1000/parrhesia1000.Launcher</module-starter>
+        <module-starter>parrhesia/parrhesia1000.Launcher</module-starter>
         <package-identifier>app.parrhesia1000</package-identifier>
     </properties>
 
@@ -55,6 +55,12 @@
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </pluginRepository>
     </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -129,6 +135,16 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.tools1000</groupId>
+            <artifactId>tools1000</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.tools1000.fx1000</groupId>
+            <artifactId>fx1000</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>io.github.tools1000.codesignjava</groupId>-->

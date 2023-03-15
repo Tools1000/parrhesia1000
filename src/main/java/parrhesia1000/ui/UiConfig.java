@@ -18,4 +18,6 @@ public class UiConfig {
     private int initialHeight;
 
     private String overrideLocale;
+
+    private int authorCircleRadius;
 }

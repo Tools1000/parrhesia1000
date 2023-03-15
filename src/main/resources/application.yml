@@ -1,6 +1,8 @@
 spring:
   main:
     banner-mode: off
+    jackson:
+      default-property-inclusion: non_null
 
 logging:
   file:
@@ -9,24 +11,37 @@ logging:
     root: info
     parrhesia1000: debug
     parrhesia1000.SessionCallbackHandler: info
+    parrhesia1000.request.DefaultRequestSender: info
+    parrhesia1000.LinkTextFormatterStrategy: info
+    parrhesia1000.ui.control.AuthorBoxElement: info
 #    parrhesia1000.FeedElementCache: info
     org:
       springframework:
         web: debug
 
 app:
+  relays:
+    - "wss://relay.damus.io"
+    - "wss://eden.nostr.land"
+  debug: false
   pub: 8531bb63dfbe216e140ed8507b38678f684ae67e0c06512abe5a19e50f0db1c3
   name: parrhesia1000
-  debug: false
   settings:
       parent: ${user.home}
       dir: ${app.settings.parent}/.${app.name}
       log-file: ${app.settings.dir}/${app.name}.log
   feed:
-    delay: 1000
+    delay: 0
+    global:
+      look-behind-seconds: 10
+    personal:
+      look-behind-seconds: 86400 #one day
   ui:
-    appTitle: "Parrhesia1000"
-    initialWidth: 800
-    initialHeight: 600
-    imageHeight: 200
+    app-title: "Parrhesia1000"
+    initial-width: 800
+    initial-height: 600
+    image-height: 200
+    author-circle-radius: 20
+  cache:
+    author-cache-size: 1000
 

@@ -8,14 +8,15 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import parrhesia1000.dto.Author;
-import parrhesia1000.event.Event;
+import parrhesia1000.config.AppConfig;
+import parrhesia1000.nostr.event.Event;
 import parrhesia1000.request.RequestFactory;
 import parrhesia1000.request.RequestSender;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicLong;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -28,10 +29,16 @@ public class TestSessionCallbackHandler extends TextWebSocketHandler {
 
     private final RequestSender requestSender;
 
+    private AtomicLong eventCounter = new AtomicLong();
+
+    private LocalDateTime oldest = LocalDateTime.MAX;
+
+    private LocalDateTime newest = LocalDateTime.MIN;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("Connection established with session: {}", session);
-        requestSender.sendRequest(session, new RequestFactory().buildGetAuthorMetadataRequest(List.of("c5d33ae2ca60815d54f6f6ef4af3a426355665fb0a4bb384d28171e6b872c441")));
+        requestSender.sendRequest(session, RequestFactory.buildPublicFeedRequest());
     }
 
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
@@ -46,14 +53,23 @@ public class TestSessionCallbackHandler extends TextWebSocketHandler {
 
         Event event = mapper.readValue(message.getPayload().getBytes(StandardCharsets.UTF_8), Event.class);
 
-        log.debug("Received event: {}", event);
+        log.debug("Received event {}: {}", eventCounter.incrementAndGet(), event);
 
-        if(!event.getEvent().equals("EOSE")) {
-            Author author = mapper.readValue(event.getData().getContent(), Author.class);
-            log.debug("Author: {}", author);
-
+        if(event.getData() == null){
+            log.debug("Ignoring {}", event);
+            return;
         }
 
+        LocalDateTime eventTime = ParrhesiaUtils.parse(event.getData().getCreatedAt());
+        if(eventTime.isBefore(oldest)){
+            oldest = eventTime;
+        }
+        if(eventTime.isAfter(newest)){
+            newest = eventTime;
+        }
+        log.debug("Oldest: {}, current: {}, newest: {}", oldest, ParrhesiaUtils.parse(event.getData().getCreatedAt()), newest);
+
+        int wait = 0;
     }
 
 

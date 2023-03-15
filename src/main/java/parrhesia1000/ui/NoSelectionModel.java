@@ -3,6 +3,7 @@ package parrhesia1000.ui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.MultipleSelectionModel;
+import parrhesia1000.ui.control.FeedContentBox;
 
 public class NoSelectionModel extends MultipleSelectionModel<FeedContentBox> {
     @Override

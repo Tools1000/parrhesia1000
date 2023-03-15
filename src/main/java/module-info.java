@@ -1,4 +1,4 @@
-open module parrhesia1000 {
+open module parrhesia {
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
     requires javafx.base;
@@ -23,8 +23,12 @@ open module parrhesia1000 {
     requires org.apache.tomcat.embed.core;
     requires org.apache.tomcat.embed.el;
     requires org.apache.tomcat.embed.websocket;
+    requires tools;
+    requires fx;
     exports parrhesia1000;
     exports parrhesia1000.dto;
     exports parrhesia1000.ui;
+    exports parrhesia1000.ui.control;
+    exports parrhesia1000.config;
 
 }

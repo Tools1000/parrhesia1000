@@ -25,7 +25,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import parrhesia1000.AppConfig;
+import parrhesia1000.config.AppConfig;
 
 import java.net.URL;
 import java.util.ResourceBundle;

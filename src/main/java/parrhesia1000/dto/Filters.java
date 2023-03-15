@@ -18,4 +18,10 @@ public class Filters {
 
     @JsonProperty("ids")
     private List<String> ids;
+
+    private Integer limit;
+
+    private Integer since;
+
+    private Integer until;
 }

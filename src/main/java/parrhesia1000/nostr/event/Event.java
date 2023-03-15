@@ -1,4 +1,4 @@
-package parrhesia1000.event;
+package parrhesia1000.nostr.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

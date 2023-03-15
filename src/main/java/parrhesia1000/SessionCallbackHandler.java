@@ -1,6 +1,7 @@
 package parrhesia1000;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fx1000.Alerts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -8,42 +9,44 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import parrhesia1000.event.Event;
-import parrhesia1000.event.handler.AuthorMetadataEventHandler;
-import parrhesia1000.event.handler.FindAuthorsEventHandler;
-import parrhesia1000.event.handler.PersonalFeedHandler;
+import parrhesia1000.config.AppConfig;
+import parrhesia1000.nostr.event.Event;
+import parrhesia1000.nostr.event.handler.*;
 import parrhesia1000.request.RequestFactory;
 import parrhesia1000.request.RequestSender;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @RequiredArgsConstructor
 @Slf4j
 @Component
 public class SessionCallbackHandler extends TextWebSocketHandler {
 
-    private final AppConfig appConfig;
-
     private final ObjectMapper mapper;
 
-    private final RequestSender requestSender;
+    private final List<EventHandler> eventHandlerList = new ArrayList<>();
 
-    private final FindAuthorsEventHandler findAuthorsEventHandler;
+    private final List<ConnectHandler> connectHandlerList = new ArrayList<>();
 
-    private final PersonalFeedHandler personalFeedHandler;
-
-    private final AuthorMetadataEventHandler authorMetadataEventHandler;
+    private AtomicLong eventCounter = new AtomicLong();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("Connection established with session: {}", session);
-
-        requestSender.sendRequest(session, new RequestFactory().buildFindAuthorsRequest(appConfig.getPub()));
+        for(ConnectHandler connectHandler : connectHandlerList){
+            connectHandler.connected(session);
+        }
     }
 
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         log.info("Connection closed {}", session);
+        for(ConnectHandler connectHandler : connectHandlerList){
+            connectHandler.disconnected(session);
+        }
     }
 
     @Override
@@ -52,14 +55,26 @@ public class SessionCallbackHandler extends TextWebSocketHandler {
 
         Event event = mapper.readValue(message.getPayload().getBytes(StandardCharsets.UTF_8), Event.class);
 
-        log.debug("Received event: {}", event);
+        if("NOTICE".equals(event.getEvent())){
+            log.warn("Received event {}: {}", eventCounter.incrementAndGet(), event);
+        } else {
+            log.debug("Received event {}: {}", eventCounter.incrementAndGet(), event);
+        }
 
-        findAuthorsEventHandler.handleEvent(session, event);
-        personalFeedHandler.handleEvent(session, event);
-        authorMetadataEventHandler.handleEvent(session, event);
-
+       for(EventHandler eventHandler : new ArrayList<>(eventHandlerList)){
+           eventHandler.handleEvent(session, event);
+       }
 
     }
 
+    // Getter / Setter //
 
+
+    public List<EventHandler> getEventHandlerList() {
+        return eventHandlerList;
+    }
+
+    public List<ConnectHandler> getConnectHandlerList() {
+        return connectHandlerList;
+    }
 }

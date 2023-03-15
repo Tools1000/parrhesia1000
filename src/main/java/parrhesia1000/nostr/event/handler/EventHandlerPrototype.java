@@ -1,21 +1,33 @@
-package parrhesia1000.event.handler;
+package parrhesia1000.nostr.event.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
-import parrhesia1000.event.Event;
+import parrhesia1000.config.AppConfig;
+import parrhesia1000.nostr.event.Event;
 
 @Slf4j
 public abstract class EventHandlerPrototype implements EventHandler {
 
     protected final ObjectMapper objectMapper;
 
-    public EventHandlerPrototype(ObjectMapper objectMapper) {
+    protected final AppConfig appConfig;
+
+    public EventHandlerPrototype(ObjectMapper objectMapper, AppConfig appConfig) {
         this.objectMapper = objectMapper;
+        this.appConfig = appConfig;
     }
 
     @Override
     public void handleEvent(WebSocketSession session, Event event) {
+
+        if (appConfig.isDebug()) {
+            try {
+                Thread.sleep(appConfig.getFeed().getDelay()); // delay feed somewhat
+            } catch (InterruptedException e) {
+                log.debug("Global feed delay was interrupted");
+            }
+        }
 
         if(event.getEvent().equals("EOSE")){
             return;

@@ -2,7 +2,6 @@
   <configuration default="false" name="Launcher" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <module name="parrhesia" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="parrhesia1000.Launcher" />
-    <option name="VM_PARAMETERS" value="-Djavax.net.debug=ssl:handshake" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="parrhesia1000.*" />
