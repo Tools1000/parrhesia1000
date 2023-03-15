@@ -13,46 +13,30 @@ import java.time.temporal.ChronoUnit;
 @ToString
 public class TimeRange {
 
-    public static int DEFAULT_RANGE_IN_MINUTES = 5;
+    private LocalDateTime until, since;
 
-    private LocalDateTime start, end;
-
-    private Duration iterationDuration;
-
-    public TimeRange() {
-        this(LocalDateTime.now(), LocalDateTime.now().minusMinutes(DEFAULT_RANGE_IN_MINUTES));
+    public TimeRange(Duration duration) {
+        this(LocalDateTime.now(), LocalDateTime.now().minus(duration));
     }
 
-    public TimeRange(LocalDateTime start, LocalDateTime end) {
-        this.start = start;
-        this.end = end;
-        iterationDuration = Duration.of(DEFAULT_RANGE_IN_MINUTES, ChronoUnit.MINUTES);
+    public TimeRange(LocalDateTime until, LocalDateTime since) {
+        this.until = until;
+        this.since = since;
     }
 
-    /**
-     * Returns a time range between old start and now
-     * @return
-     */
-    public TimeRange updateStart(){
-        return new TimeRange(LocalDateTime.now(), start);
+    public TimeRange updateUntil(){
+        return new TimeRange(LocalDateTime.now(), until);
     }
 
-    /**
-     * Returns a time range between old end and end
-     * @return
-     */
-    public TimeRange updateEnd(){
-        return updateEnd(iterationDuration);
-    }
 
-    public TimeRange updateEnd(Duration duration){
-        return new TimeRange(end, end.minus(duration));
+    public TimeRange updateSince(Duration duration){
+        return new TimeRange(since, since.minus(duration));
     }
 
     public TimeRange merge(TimeRange t1, TimeRange t2){
-        LocalDateTime start = t1.getStart().isAfter(t2.getStart()) ? t1.getStart() : t2.getStart();
-        LocalDateTime end = t2.getEnd().isBefore(t2.getEnd()) ? t1.getEnd() : t2.getEnd();
-        return new TimeRange(start, end);
+        LocalDateTime until = t1.getUntil().isAfter(t2.getUntil()) ? t1.getUntil() : t2.getUntil();
+        LocalDateTime since = t1.getSince().isBefore(t2.getSince()) ? t1.getSince() : t2.getSince();
+        return new TimeRange(until, since);
     }
 
 

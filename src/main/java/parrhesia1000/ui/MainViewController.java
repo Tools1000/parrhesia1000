@@ -271,14 +271,16 @@ public class MainViewController extends DebuggableController implements Initiali
     }
 
     public void handleLoadOlderPosts(String subscriptionId, List<String> authors) {
-        TimeRange timeRange = timeRangeMap.getMap().getOrDefault(subscriptionId, new TimeRange());
-        requestSender.sendRequest(client.getSession(), RequestFactory.buildFeedRequest(subscriptionId, timeRange).addKindsFilter(List.of(1)).addAuthorsFilter(authors));
-        TimeRange timeRangeNew;
-        if(authors != null && !authors.isEmpty()){
-            timeRangeNew = timeRange.updateEnd(Duration.of(1, ChronoUnit.DAYS));
+        boolean shortDuration = authors == null || authors.isEmpty();
+        Duration duration;
+        if(shortDuration){
+            duration = Duration.of(19, ChronoUnit.SECONDS);
         } else {
-            timeRangeNew = timeRange.updateEnd();
+            duration = Duration.of(1, ChronoUnit.DAYS);
         }
+        TimeRange timeRange = timeRangeMap.getMap().getOrDefault(subscriptionId, new TimeRange(duration));
+        requestSender.sendRequest(client.getSession(), RequestFactory.buildFeedRequest(subscriptionId, timeRange).addKindsFilter(List.of(1)).addAuthorsFilter(authors));
+        TimeRange timeRangeNew = timeRange.updateSince(Duration.of(1, ChronoUnit.DAYS));
         timeRangeMap.getMap().put(subscriptionId, timeRangeNew);
         log.debug("Loading older posts, old time range: {}, new time range {}", timeRange, timeRangeNew);
     }

@@ -105,8 +105,8 @@ public class RequestFactory {
 
 
         Filters filters = new Filters();
-        filters.setSince((int) ParrhesiaUtils.getSecondsTimestampFromLocalDateTime(range.getEnd()));
-        filters.setUntil((int) ParrhesiaUtils.getSecondsTimestampFromLocalDateTime(range.getStart()));
+        filters.setSince((int) ParrhesiaUtils.getSecondsTimestampFromLocalDateTime(range.getSince()));
+        filters.setUntil((int) ParrhesiaUtils.getSecondsTimestampFromLocalDateTime(range.getUntil()));
         Request req = new Request();
         req.setSubscriptionId(subscriptionId);
         req.setFilters(filters);
