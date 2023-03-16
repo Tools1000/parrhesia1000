@@ -9,7 +9,7 @@
     </parent>
     <groupId>app.parrhesia1000</groupId>
     <artifactId>parrhesia1000</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
 
     <properties>
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
