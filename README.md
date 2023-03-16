@@ -18,4 +18,4 @@ A JavaFX [nostr](https://nostr.com/) client.
 
 ## Screens
 
-<img width="912" alt="Screenshot 2023-03-15 at 18 47 24" src="https://user-images.githubusercontent.com/13817521/225399125-f74a91ce-b677-478a-b039-60e0db27efd0.png">
+<img width="716" alt="Screenshot 2023-03-16 at 22 22 10" src="https://user-images.githubusercontent.com/13817521/225755675-d7053c8b-7fac-4349-9f39-dac8e5a7c299.png">
