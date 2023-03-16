@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import parrhesia1000.ui.control.AppStats?>
-<?import javafx.scene.layout.AnchorPane?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="parrhesia1000.ui.MainViewController" fx:id="root">
@@ -21,31 +21,6 @@
     </MenuBar>
 
     <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS" side="BOTTOM">
-<!--        <Tab fx:id="globalFeedTab" text="Global Feed" closable="false">-->
-<!--            <StackPane fx:id="stack1">-->
-<!--            <AnchorPane fx:id="stack">-->
-<!--                <ListView fx:id="listView" AnchorPane.bottomAnchor="4" AnchorPane.topAnchor="4" AnchorPane.leftAnchor="4" AnchorPane.rightAnchor="4">-->
-<!--&lt;!&ndash;                    <StackPane.margin>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <Insets bottom="4" left="4" right="4" top="4" />&ndash;&gt;-->
-<!--&lt;!&ndash;                    </StackPane.margin>&ndash;&gt;-->
-<!--                </ListView>-->
-<!--                <AppStats fx:id="appStats" fillWidth="false" AnchorPane.topAnchor="12" AnchorPane.rightAnchor="30" visible="false">-->
-<!--&lt;!&ndash;                    <StackPane.margin>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <Insets bottom="8" left="8" right="8" top="8" />&ndash;&gt;-->
-<!--&lt;!&ndash;                    </StackPane.margin>&ndash;&gt;-->
-<!--                </AppStats>-->
-<!--            </AnchorPane>-->
-<!--                <Button fx:id="loadNewButton" StackPane.alignment="TOP_CENTER"-->
-<!--                        onAction="#handleLoadNewPostsGlobalFeed">-->
-<!--                                        <StackPane.margin>-->
-<!--                                            <Insets bottom="12" left="12" right="12" top="12" />-->
-<!--                                        </StackPane.margin>-->
-<!--                </Button>-->
-<!--            </StackPane>-->
-
-
-
-<!--        </Tab>-->
     </TabPane>
 
 </VBox>

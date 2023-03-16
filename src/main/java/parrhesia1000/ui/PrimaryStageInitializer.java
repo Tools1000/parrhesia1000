@@ -2,7 +2,9 @@ package parrhesia1000.ui;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
@@ -31,6 +33,7 @@ public class PrimaryStageInitializer {
             mainScene = new Scene(fxWeaver.loadView(MainViewController.class, resourceBundle), uiConfig.getInitialWidth(), uiConfig.getInitialHeight());
             mainScene.getStylesheets().add("/css/general.css");
             stage.setTitle(uiConfig.getAppTitle());
+            mainScene.setFill(Color.TRANSPARENT);
             stage.setScene(mainScene);
             stage.show();
         });

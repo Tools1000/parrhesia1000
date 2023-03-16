@@ -211,7 +211,7 @@
 
 .scroll-bar:horizontal .thumb,
 .scroll-bar:vertical .thumb {
-    -fx-background-color: #e3a359;
+    -fx-background-color: rgba(183, 25, 218,1);
 }
 
 .increment-button .scroll-bar{
@@ -233,8 +233,58 @@
 }
 
 .tab {
-    -fx-pref-width: 140
+    -fx-pref-width: 140;
+    -fx-background-color: rgba(180, 57, 208, 0.75);
+    -fx-border-color: rgb(183, 25, 218);
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 0;
+
+    /*-fx-border-insets: 3 3 3 3, 3 3 3 3;*/
 }
+
+.tab-label {
+    -fx-pref-width: 110;
+}
+
+/*.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {*/
+/*    -fx-border-color: rgba(32, 96, 165, 0);*/
+/*}*/
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-color: rgb(129, 17, 154);
+    -fx-border-radius: 10;
+    -fx-border-width: 0;
+}
+
+#tabPane .tab:selected .tab-label {
+    -fx-font-family: 'Ubuntu Bold';
+    /*-fx-underline: true;*/
+    -fx-text-fill: #2060a5;
+}
+
+.tab-content-area {
+    -fx-border-radius: 0 0 0 0;
+    -fx-border-width: 0 0 0 0;
+    -fx-background-color: rgba(255, 255, 255, 0);
+}
+
+.transparent-background {
+    -fx-background-color: rgba(255, 255, 255, 0);
+}
+
+.nostr-background {
+    /*-fx-background-color: rgba(22, 20, 23, 0.98);*/
+}
+
+.button {
+    -fx-border-radius: 20 20 20 20;
+    -fx-border-width: 0;
+    -fx-background-color: rgba(180, 57, 208, 0.75);
+    -fx-background-radius: 20 20 20 20;
+}
+
+
 
 
 

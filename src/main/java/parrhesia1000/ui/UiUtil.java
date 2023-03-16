@@ -43,7 +43,15 @@ public class UiUtil {
     }
 
     public static void applyRandomColors(Node... elements) {
-        Stream.of(elements).forEach(l -> l.setStyle("-fx-background-color: " + UiUtil.getRandomRgbaColorString(0.3) + ";"));
+        Stream.of(elements).forEach(l -> {
+            String style = l.getStyle();
+            if(style == null){
+                style = "";
+            }
+            StringBuilder sb = new StringBuilder(style);
+            sb.append("-fx-background-color: " + UiUtil.getRandomRgbaColorString(0.3) + ";");
+            l.setStyle(sb.toString());
+        });
     }
 
     public static void applyRandomTextColors(Node... elements) {

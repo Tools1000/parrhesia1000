@@ -16,10 +16,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -114,7 +111,7 @@ public class MainViewController extends DebuggableController implements Initiali
 
     @Override
     protected Parent[] getUiElementsForRandomColor() {
-        return new Parent[0];
+        return new Parent[]{root, tabPane};
     }
 
     public void handleMenuItemSettings(ActionEvent actionEvent) {
@@ -123,12 +120,19 @@ public class MainViewController extends DebuggableController implements Initiali
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        super.initialize(url, resourceBundle);
+
         FXUtil.initAppMenu(menuBar);
-        applyRandomColors(root, tabPane);
 
         tabPane.getTabs().add(buildGlobalFeedTab("Global Feed"));
 
-        tabPane.getTabs().add(buildButton());
+        Tab tab = buildButton();
+        tabPane.getTabs().add(tab);
+
+        root.getStyleClass().add("nostr-background");
+
+        tabPane.getStyleClass().add("floating");
+        tabPane.getStyleClass().add("custom-tab-pane");
 
 
 
@@ -196,7 +200,8 @@ public class MainViewController extends DebuggableController implements Initiali
                 pubKey = StringUtils.abbreviateMiddle(pubKey, "..", 14);
                 String subId = "feed-for-" + pubKey;
                 log.debug("Adding tab for {}", pubKey);
-                tab.setContent(buildPersonalFeedContent(subId, List.of(Bech32ToHexString.decode(textField.getText().trim())), feed, eventCache));
+                Node node = buildPersonalFeedContent(subId, List.of(Bech32ToHexString.decode(textField.getText().trim())), feed, eventCache);
+                tab.setContent(node);
                 tab.setText(pubKey);
                 timeRangeMap.getMap().put(subId, new TimeRange(LocalDateTime.now(), LocalDateTime.now().minusHours(1)));
                 sessionCallbackHandler.getEventHandlerList().add(new PersonalFeedHandler(mapper, appConfig,subId,authorCache, requestSender, eventCache));
@@ -256,8 +261,11 @@ public class MainViewController extends DebuggableController implements Initiali
     }
 
     private Node buildFeedContent(String subscriptionId, List<String> authors, Feed feed, EventCache eventCache) {
-        StackPane stackPane = new StackPane();
+        Pane stackPane = new StackPane();
+        stackPane.getStyleClass().add("feed-content-pane");
         ListView<FeedContentBox> listView = configureNewFeedListView(buildNewFeedListView());
+        listView.getStyleClass().add("list-view");
+//        listView.setPadding(new Insets(20,0,20,0));
         Bindings.bindContent(listView.getItems(), feed.getFeedContent());
         Button loadNewerButton = new Button("Load newer");
         Button loadOlderButton = new Button("Load older");
@@ -293,24 +301,66 @@ public class MainViewController extends DebuggableController implements Initiali
             }
         });
 
-        loadMoreButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty().not());
-        loadMoreButton2.visibleProperty().bind(eventCache.elementsProperty().emptyProperty().not());
-        loadNewerButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty());
-        loadOlderButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty());
 
+//        stackPane.getChildren().add(UiUtil.applyDebug(buildHorizontalButtonsBox(loadNewerButton, loadMoreButton, eventCache), appConfig.isDebug()));
         stackPane.getChildren().add(UiUtil.applyDebug(listView, appConfig.isDebug()));
-        stackPane.getChildren().add(UiUtil.applyDebug(loadMoreButton, true));
-        StackPane.setAlignment(loadMoreButton, Pos.TOP_CENTER);
-        stackPane.getChildren().add(UiUtil.applyDebug(loadMoreButton2, true));
-        StackPane.setAlignment(loadMoreButton2, Pos.BOTTOM_CENTER);
-        stackPane.getChildren().add(UiUtil.applyDebug(loadNewerButton, true));
+//        stackPane.getChildren().add(UiUtil.applyDebug(buildHorizontalButtonsBox(loadOlderButton, loadMoreButton2, eventCache), appConfig.isDebug()));
+
+        stackPane.getChildren().add(UiUtil.applyDebug(loadNewerButton, appConfig.isDebug()));
+        stackPane.getChildren().add(UiUtil.applyDebug(loadMoreButton, appConfig.isDebug()));
+        stackPane.getChildren().add(UiUtil.applyDebug(loadOlderButton, appConfig.isDebug()));
+        stackPane.getChildren().add(UiUtil.applyDebug(loadMoreButton2, appConfig.isDebug()));
+
+        VBox.setVgrow(listView, Priority.ALWAYS);
+        loadNewerButton.setAlignment(Pos.CENTER);
+        loadOlderButton.setAlignment(Pos.CENTER);
+        loadMoreButton.setAlignment(Pos.CENTER);
+        loadMoreButton2.setAlignment(Pos.CENTER);
+
         StackPane.setAlignment(loadNewerButton, Pos.TOP_CENTER);
-        stackPane.getChildren().add(UiUtil.applyDebug(loadOlderButton, true));
+        StackPane.setAlignment(loadMoreButton, Pos.TOP_CENTER);
         StackPane.setAlignment(loadOlderButton, Pos.BOTTOM_CENTER);
+        StackPane.setAlignment(loadMoreButton2, Pos.BOTTOM_CENTER);
+
+        loadMoreButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty().not());
+        loadMoreButton.managedProperty().bind(loadMoreButton.visibleProperty());
+        loadNewerButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty());
+        loadNewerButton.managedProperty().bind(loadNewerButton.visibleProperty());
+
+        loadMoreButton2.visibleProperty().bind(eventCache.elementsProperty().emptyProperty().not());
+        loadMoreButton2.managedProperty().bind(loadMoreButton2.visibleProperty());
+        loadOlderButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty());
+        loadOlderButton.managedProperty().bind(loadOlderButton.visibleProperty());
+
         return stackPane;
     }
 
+    private HBox buildHorizontalButtonsBox(Button loadNewerButton, Button loadMoreButton, EventCache eventCache) {
+        HBox box = horizontalSpacerHox(List.of(loadNewerButton, loadMoreButton));
+        loadMoreButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty().not());
+        loadMoreButton.managedProperty().bind(loadMoreButton.visibleProperty());
+        loadNewerButton.visibleProperty().bind(eventCache.elementsProperty().emptyProperty());
+        loadNewerButton.managedProperty().bind(loadNewerButton.visibleProperty());
+        return box;
+    }
+
+    private HBox horizontalSpacerHox(List<Node> nodes) {
+        HBox topButtonsBox = new HBox();
+        Pane spacer1 = new Pane();
+        Pane spacer2 = new Pane();
+        topButtonsBox.getChildren().add(UiUtil.applyDebug(spacer1, appConfig.isDebug()));
+        for(Node node : nodes){
+            topButtonsBox.getChildren().add(UiUtil.applyDebug(node, appConfig.isDebug()));
+        }
+        topButtonsBox.getChildren().add(UiUtil.applyDebug(spacer2, appConfig.isDebug()));
+        HBox.setHgrow(spacer1, Priority.ALWAYS);
+        HBox.setHgrow(spacer2, Priority.ALWAYS);
+
+        return topButtonsBox;
+    }
+
     private ListView<FeedContentBox> configureNewFeedListView(ListView<FeedContentBox> listView){
+        listView.getStyleClass().add("transparent-background");
         listView.prefWidthProperty().bind(tabPane.prefWidthProperty());
         listView.prefHeightProperty().bind(tabPane.prefHeightProperty());
         listView.setCellFactory(new Callback<ListView<FeedContentBox>, ListCell<FeedContentBox>>() {
@@ -326,7 +376,7 @@ public class MainViewController extends DebuggableController implements Initiali
                             setGraphic(null);
                         } else {
                             setGraphic(item);
-                            item.prefWidthProperty().bind(listView.widthProperty().subtract(50));
+                            item.prefWidthProperty().bind(listView.widthProperty().subtract(100));
                         }
                     }
                 };
