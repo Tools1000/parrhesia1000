@@ -139,12 +139,12 @@
         <dependency>
             <groupId>io.github.tools1000</groupId>
             <artifactId>tools1000</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>io.github.tools1000.fx1000</groupId>
             <artifactId>fx1000</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.1</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>io.github.tools1000.codesignjava</groupId>-->
