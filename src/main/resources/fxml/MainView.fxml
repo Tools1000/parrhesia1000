@@ -10,9 +10,9 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="parrhesia1000.ui.MainViewController" fx:id="root">
 
-    <padding>
-        <Insets top="4" right="4" bottom="4" left="4"/>
-    </padding>
+<!--    <padding>-->
+<!--        <Insets top="4" right="4" bottom="4" left="4"/>-->
+<!--    </padding>-->
 
     <MenuBar fx:id="menuBar">
         <Menu text="File">

@@ -234,7 +234,7 @@
 
 .tab {
     -fx-pref-width: 140;
-    -fx-background-color: rgba(180, 57, 208, 0.75);
+    -fx-background-color: rgba(180, 57, 208, 0.85);
     -fx-border-color: rgb(183, 25, 218);
     -fx-background-radius: 20;
     -fx-border-radius: 20;
@@ -280,7 +280,7 @@
 .button {
     -fx-border-radius: 20 20 20 20;
     -fx-border-width: 0;
-    -fx-background-color: rgba(180, 57, 208, 0.75);
+    -fx-background-color: rgba(180, 57, 208, 0.85);
     -fx-background-radius: 20 20 20 20;
 }
 

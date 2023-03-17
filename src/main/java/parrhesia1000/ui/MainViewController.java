@@ -69,28 +69,10 @@ public class MainViewController extends DebuggableController implements Initiali
 
     public VBox root;
 
-    @FXML
-    public Tab globalFeedTab;
-
-    @FXML
-    public Button loadNewButton;
-
     public TabPane tabPane;
 
     @FXML
-    public Pane stack;
-
-    @FXML
-    public AppStats appStats;
-
-    @FXML
-    public Pane stack1;
-
-    @FXML
     MenuBar menuBar;
-
-    @FXML
-    ListView<FeedContentBox> listView;
 
    private final TimeRangeMap timeRangeMap;
 
@@ -376,7 +358,7 @@ public class MainViewController extends DebuggableController implements Initiali
                             setGraphic(null);
                         } else {
                             setGraphic(item);
-                            item.prefWidthProperty().bind(listView.widthProperty().subtract(100));
+                            item.prefWidthProperty().bind(listView.widthProperty().subtract(40));
                         }
                     }
                 };
