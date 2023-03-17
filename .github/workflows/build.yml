@@ -137,8 +137,6 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/appdir/*.deb
-            target/appdir/*.zip
             target/*.deb
             target/*.zip
 
@@ -169,7 +167,6 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/appdir/*.msi
             target/*.msi
 
   draft_release:

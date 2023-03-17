@@ -440,10 +440,21 @@
                                     <goal>copy</goal>
                                 </goals>
                                 <configuration>
-                                    <sourceFile>target/appdir/Parrhesia1000-${app-version}.zip</sourceFile>
-                                    <destinationFile>target/${project.artifactId}-${javafx.platform}-${project.version}.zip</destinationFile>
-                                    <sourceFile>target/appdir/parrhesia1000_${app-version}-1_amd64.deb</sourceFile>
-                                    <destinationFile>target/${project.artifactId}-${javafx.platform}-${project.version}.deb</destinationFile>
+                                    <fileSets>
+                                        <fileSet>
+                                            <sourceFile>target/appdir/Parrhesia1000-${app-version}.zip</sourceFile>
+                                            <destinationFile>
+                                                target/${project.artifactId}-${javafx.platform}-${project.version}.zip
+                                            </destinationFile>
+                                        </fileSet>
+                                        <fileSet>
+                                            <sourceFile>target/appdir/parrhesia1000_${app-version}-1_amd64.deb
+                                            </sourceFile>
+                                            <destinationFile>
+                                                target/${project.artifactId}-${javafx.platform}-${project.version}.deb
+                                            </destinationFile>
+                                        </fileSet>
+                                    </fileSets>
                                 </configuration>
                             </execution>
                         </executions>
