@@ -334,7 +334,7 @@
                                     <goal>copy</goal>
                                 </goals>
                                 <configuration>
-                                    <sourceFile>target/appdir/Parrhesia1000-1.0.0.dmg</sourceFile>
+                                    <sourceFile>target/appdir/Parrhesia1000-${app-version}.dmg</sourceFile>
                                     <destinationFile>target/${project.artifactId}-${javafx.platform}-${project.version}.dmg</destinationFile>
                                 </configuration>
                             </execution>
@@ -387,7 +387,7 @@
                                     <goal>copy</goal>
                                 </goals>
                                 <configuration>
-                                    <sourceFile>target/appdir/Parrhesia1000-1.0.0.dmg</sourceFile>
+                                    <sourceFile>target/appdir/Parrhesia1000-${app-version}.dmg</sourceFile>
                                     <destinationFile>target/${project.artifactId}-${javafx.platform}-${project.version}.dmg</destinationFile>
                                 </configuration>
                             </execution>
@@ -428,6 +428,24 @@
 <!--                            <resourceDir>${basedir}/dist/linux/debian</resourceDir>-->
                         </configuration>
                     </plugin>
+                    <plugin>
+                        <groupId>com.coderplus.maven.plugins</groupId>
+                        <artifactId>copy-rename-maven-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>rename-dmg</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceFile>target/appdir/Parrhesia1000-${app-version}.zip</sourceFile>
+                                    <destinationFile>target/${project.artifactId}-${javafx.platform}-${project.version}.zip</destinationFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -461,6 +479,24 @@
                             <moduleStarter>${module-starter}</moduleStarter>
                             <winUpgradeUuid>bbc0f390-be79-11ed-afa1-0242ac120002</winUpgradeUuid>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.coderplus.maven.plugins</groupId>
+                        <artifactId>copy-rename-maven-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>rename</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceFile>target/appdir/Parrhesia1000-${app-version}.msi</sourceFile>
+                                    <destinationFile>target/${project.artifactId}-${javafx.platform}-${project.version}.msi</destinationFile>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -497,6 +533,24 @@
                             <moduleStarter>${module-starter}</moduleStarter>
                             <winUpgradeUuid>bbc0f390-be79-11ed-afa1-0242ac120002</winUpgradeUuid>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.coderplus.maven.plugins</groupId>
+                        <artifactId>copy-rename-maven-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>rename-dmg</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceFile>target/appdir/Parrhesia1000-${app-version}.msi</sourceFile>
+                                    <destinationFile>target/${project.artifactId}-${javafx.platform}-${project.version}.msi</destinationFile>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
