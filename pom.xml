@@ -328,7 +328,7 @@
                         <version>1.0.1</version>
                         <executions>
                             <execution>
-                                <id>rename-dmg</id>
+                                <id>rename</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>copy</goal>
@@ -381,7 +381,7 @@
                         <version>1.0.1</version>
                         <executions>
                             <execution>
-                                <id>rename-dmg</id>
+                                <id>rename</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>copy</goal>
@@ -434,7 +434,7 @@
                         <version>1.0.1</version>
                         <executions>
                             <execution>
-                                <id>rename-dmg</id>
+                                <id>rename</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>copy</goal>
@@ -540,7 +540,7 @@
                         <version>1.0.1</version>
                         <executions>
                             <execution>
-                                <id>rename-dmg</id>
+                                <id>rename</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>copy</goal>

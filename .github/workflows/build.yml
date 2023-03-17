@@ -139,6 +139,8 @@ jobs:
           path: |
             target/appdir/*.deb
             target/appdir/*.zip
+            target/*.deb
+            target/*.zip
 
   build_windows_x86_64:
     needs: [compile_and_test]
@@ -168,6 +170,7 @@ jobs:
           if-no-files-found: error
           path: |
             target/appdir/*.msi
+            target/*.msi
 
   draft_release:
     env:
