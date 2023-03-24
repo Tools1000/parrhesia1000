@@ -19,7 +19,7 @@
         <codesignjava.version>3.1.0-SNAPSHOT</codesignjava.version>
         <java.version>17</java.version>
         <javafx.version>19.0.2.1</javafx.version>
-        <spring-boot.version>3.0.4</spring-boot.version>
+        <spring-boot.version>3.0.5</spring-boot.version>
         <spring-cloud.version>3.1.14</spring-cloud.version>
         <codesignjava.version>3.1.0-SNAPSHOT</codesignjava.version>
         <modular-group-ids>org.openjfx</modular-group-ids>
