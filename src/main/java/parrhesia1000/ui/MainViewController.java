@@ -26,12 +26,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 import parrhesia1000.*;
 import parrhesia1000.config.AppConfig;
-import parrhesia1000.nostr.event.handler.AuthorCacheHandler;
+import parrhesia1000.nostr.event.handler.AuthorsMetadataEventHandler;
 import parrhesia1000.nostr.event.handler.GenericFeedHandler;
 import parrhesia1000.nostr.event.handler.PersonalFeedHandler;
 import parrhesia1000.request.RequestFactory;
 import parrhesia1000.request.RequestSender;
-import parrhesia1000.ui.control.AppStats;
 import parrhesia1000.ui.control.FeedContentBox;
 import tools1000.ToolsUtil;
 
@@ -88,7 +87,7 @@ public class MainViewController extends DebuggableController implements Initiali
         this.sessionCallbackHandler = sessionCallbackHandler;
         this.requestSender = requestSender;
         this.timeRangeMap = timeRangeMap;
-        sessionCallbackHandler.getEventHandlerList().add(new AuthorCacheHandler(mapper,appConfig, authorCache, applicationContext, executor));
+        sessionCallbackHandler.getEventHandlerList().add(new AuthorsMetadataEventHandler(mapper,appConfig, authorCache));
     }
 
     @Override
@@ -171,6 +170,7 @@ public class MainViewController extends DebuggableController implements Initiali
         VBox content = new VBox(4);
         Label label = new Label("Enter pub key");
         TextField textField = new TextField();
+        textField.setPrefWidth(400);
         HBox hBox = new HBox(4);
         label.setAlignment(Pos.CENTER);
         textField.setAlignment(Pos.CENTER);
@@ -236,7 +236,7 @@ public class MainViewController extends DebuggableController implements Initiali
         List<FeedContentElement> list = ToolsUtil.getSubList(eventCache.getElements(), 20);
         log.debug("Adding {} new posts", list.size());
         for (FeedContentElement e : list) {
-            feed.addElement(new FeedContentBox(executor, appConfig, uiConfig, applicationContext.getBean(HostServices.class), e, authorCache));
+            feed.addElement(new FeedContentBox(executor, appConfig, uiConfig, applicationContext.getBean(HostServices.class), e, authorCache, client.getSession()));
         }
         eventCache.elementsProperty().removeAll(list);
         log.debug("Feed size now {}", feed.getFeedContent().size());
@@ -363,6 +363,13 @@ public class MainViewController extends DebuggableController implements Initiali
                     }
                 };
                 return lc;
+            }
+        });
+        listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FeedContentBox>() {
+
+            @Override
+            public void changed(ObservableValue<? extends FeedContentBox> observable, FeedContentBox oldValue, FeedContentBox newValue) {
+                log.debug("Selected event: {}", newValue.getFeedContentElement().getEvent());
             }
         });
         return listView;

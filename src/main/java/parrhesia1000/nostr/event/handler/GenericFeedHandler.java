@@ -26,34 +26,20 @@ public class GenericFeedHandler extends EventHandlerPrototype {
 
     protected final EventCache eventCache;
 
-    private final Set<String> authorsRequesting;
-
     public GenericFeedHandler(ObjectMapper objectMapper, AppConfig appConfig, String subscriptionId, AuthorCache authorCache, RequestSender requestSender, EventCache eventCache) {
         super(objectMapper, appConfig);
         this.subscriptionId = subscriptionId;
         this.authorCache = authorCache;
         this.requestSender = requestSender;
         this.eventCache = eventCache;
-        this.authorsRequesting = Collections.newSetFromMap(
-                new WeakHashMap<>()
-        );
     }
 
     @Override
     protected void doHandleEvent(WebSocketSession session, Event event) throws Exception {
-        Author author = authorCache.getAuthor(event.getData().getPubkey());
-        if (author == null && !isRequesting(event.getData().getPubkey())) {
-            requestSender.sendRequest(session, RequestFactory.buildGetAuthorMetadataRequest(event.getData().getPubkey()));
-            authorsRequesting.add(event.getData().getPubkey());
-            log.debug("Now requesting data for authors {}", (authorsRequesting.size() < 3 ? authorsRequesting : authorsRequesting.size()));
-        }
+        Author author = authorCache.getAuthor(event.getData().getPubkey(), session);
         Platform.runLater(() -> {
             eventCache.getElements().add(new FeedContentElement(event, author, authorCache));
         });
-    }
-
-    private boolean isRequesting(String pubKey) {
-        return pubKey != null && authorsRequesting.contains(pubKey);
     }
 
     @Override

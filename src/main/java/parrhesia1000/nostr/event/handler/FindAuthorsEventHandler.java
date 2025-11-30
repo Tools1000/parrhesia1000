@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+import parrhesia1000.AuthorsMetadataRequester;
 import parrhesia1000.config.AppConfig;
 import parrhesia1000.dto.Request;
 import parrhesia1000.nostr.event.Event;
@@ -16,8 +17,6 @@ import java.util.List;
 @Slf4j
 @Component
 public class FindAuthorsEventHandler extends EventHandlerPrototype {
-
-
 
     public FindAuthorsEventHandler(ObjectMapper objectMapper, AppConfig appConfig) {
         super(objectMapper, appConfig);
@@ -65,15 +64,7 @@ public class FindAuthorsEventHandler extends EventHandlerPrototype {
     }
 
     private void requestAuthorsMetadata(WebSocketSession session, List<String> authors) {
-        try {
-            Request req = RequestFactory.buildGetAuthorsMetadataRequest(authors);
-            String json = objectMapper.writeValueAsString(req);
-            log.info("Requesting metadata for {} authors", authors.size());
-            log.debug("Sending {}", json);
-            session.sendMessage(new TextMessage(json));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
+        new AuthorsMetadataRequester(objectMapper, session).requestAuthorsMetadata(authors);
     }
 
 

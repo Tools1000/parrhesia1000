@@ -36,6 +36,7 @@ public class LoadPictureTask extends Task<Void> {
                 if (targetArray.length > 0) {
                     Platform.runLater(() -> {
                         try {
+                            // Somehow Image needs to be init on the FX Thread
                             Image image = new Image(new ByteArrayInputStream(targetArray));
                             image.exceptionProperty().addListener((observable2, oldValue2, newValue2) -> {
                                 if (newValue2 != null) {

@@ -16,8 +16,6 @@ public class RequestFactory {
 
     public static String GET_AUTHORS_METADATA = "get-authors-metadata";
 
-    public static String GET_AUTHOR_METADATA = "get-author-metadata";
-
     public static String SUBSCRIBED_AUTHORS_FEED = "subscribed-authors-feed";
 
     public static String GLOBAL_FEED = "public-feed";
@@ -40,16 +38,6 @@ public class RequestFactory {
         filters.setKinds(List.of(0));
         Request req = new Request();
         req.setSubscriptionId(GET_AUTHORS_METADATA);
-        req.setFilters(filters);
-        return req;
-    }
-
-    public static Request buildGetAuthorMetadataRequest(String autor) {
-        Filters filters = new Filters();
-        filters.setAuthors(List.of(autor));
-        filters.setKinds(List.of(0));
-        Request req = new Request();
-        req.setSubscriptionId(GET_AUTHOR_METADATA);
         req.setFilters(filters);
         return req;
     }
